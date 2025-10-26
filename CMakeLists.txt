@@ -3,6 +3,8 @@ project(RestaurantManagement VERSION 0.1.0 LANGUAGES C CXX)
 
 add_executable(RestaurantManagement
     src/main.cpp
+    src/TimeStep.cpp
+    src/Order.cpp
 )
 
 set_target_properties(RestaurantManagement PROPERTIES
