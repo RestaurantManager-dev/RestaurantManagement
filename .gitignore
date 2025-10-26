@@ -1,0 +1,40 @@
+# --- CMake / Build Output ---
+/build/
+
+/bin/
+/lib/
+
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+*.exe
+
+# --- User-Specific Files ---
+CMakeUserPresets.json
+
+# --- IDE / Editor Folders ---
+# Visual Studio Code
+/.vscode/
+
+# Visual Studio
+/.vs/
+*.sln.user
+*.vcxproj.user
+
+# CLion
+/.idea/
+
+# --- Common OS Files ---
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db

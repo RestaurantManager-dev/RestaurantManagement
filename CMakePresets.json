@@ -1,0 +1,40 @@
+{
+    "version": 8,
+    "configurePresets": [
+        {
+            "name": "base-config",
+            "hidden": true,
+            "description": "Base settings for all configurations",
+            "generator": "MinGW Makefiles",
+            "binaryDir": "${sourceDir}/build/${presetName}"
+        },
+        {
+            "name": "debug",
+            "displayName": "Debug Build",
+            "description": "Build with debug information",
+            "inherits": "base-config",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "release",
+            "displayName": "Release Build",
+            "description": "Build with optimizations for release",
+            "inherits": "base-config",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "debug",
+            "configurePreset": "debug"
+        },
+        {
+            "name": "release",
+            "configurePreset": "release"
+        }
+    ]
+}
