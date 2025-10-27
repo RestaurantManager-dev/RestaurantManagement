@@ -1,9 +1,9 @@
 #include "Order.hpp"
 
-Order::Order(const TimeStep &arrivalTime, int size, double price) : arrivalTime(arrivalTime), size(size), price(price)
+Order::Order(int arrivalTime, int size, double price) : arrivalTime(arrivalTime), size(size), price(price)
 {
 }
-TimeStep Order::getArrivalTime() const
+int Order::getArrivalTime() const
 {
     return arrivalTime;
 }
