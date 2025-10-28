@@ -6,10 +6,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_library(RestaurantLogic
-    src/Order.cpp
-    src/NormalOrder.cpp
-    src/VeganOrder.cpp
-    src/VIPOrder.cpp
+    src/logic/Order.cpp
+    src/logic/NormalOrder.cpp
+    src/logic/VeganOrder.cpp
+    src/logic/VIPOrder.cpp
 )
 
 target_include_directories(RestaurantLogic
@@ -18,7 +18,7 @@ target_include_directories(RestaurantLogic
 )
 
 add_executable(RestaurantManagement
-    src/main.cpp
+    src/app/main.cpp
 )
 
 target_link_libraries(RestaurantManagement
