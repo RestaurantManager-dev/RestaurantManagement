@@ -1,14 +1,14 @@
 #pragma once
 
-enum OrderProgress
+enum class OrderProgress
 {
-    WAITING,
-    IN_SERVICE,
-    FINISHED,
-    CANCELLED
+    Waiting,
+    InService,
+    Finished,
+    Cancelled
 };
 
-enum OrderType
+enum class OrderType
 {
     Normal,
     Vegan,
