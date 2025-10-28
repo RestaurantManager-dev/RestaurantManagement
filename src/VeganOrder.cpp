@@ -6,5 +6,5 @@ VeganOrder::VeganOrder(int ID, int arrivalTime, int size, double price) : Order(
 
 OrderType VeganOrder::getType() const
 {
-    return Vegan;
+    return OrderType::Vegan;
 }

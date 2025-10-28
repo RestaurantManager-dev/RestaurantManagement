@@ -6,5 +6,5 @@ VIPOrder::VIPOrder(int ID, int arrivalTime, int size, double price) : Order(ID, 
 
 OrderType VIPOrder::getType() const
 {
-    return VIP;
+    return OrderType::VIP;
 }
