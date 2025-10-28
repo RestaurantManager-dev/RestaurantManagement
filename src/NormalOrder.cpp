@@ -6,5 +6,5 @@ NormalOrder::NormalOrder(int ID, int arrivalTime, int size, double price) : Orde
 
 OrderType NormalOrder::getType() const
 {
-    return Normal;
+    return OrderType::Normal;
 }

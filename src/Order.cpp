@@ -2,7 +2,7 @@
 
 Order::Order(int ID, int arrivalTime, int size, double price) : ID(ID), arrivalTime(arrivalTime), size(size), price(price)
 {
-    progress = WAITING;
+    progress = OrderProgress::Waiting;
     assignedTime = -1;
     finishTime = -1;
 }
@@ -46,7 +46,7 @@ OrderProgress Order::getProgress() const
 
 void Order::setAssignedTime(int assignedTime)
 {
-    this->arrivalTime = assignedTime;
+    this->assignedTime = assignedTime;
 }
 
 void Order::setFinishTime(int finishTime)
