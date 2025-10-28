@@ -4,6 +4,9 @@ project(RestaurantManagement VERSION 0.1.0 LANGUAGES C CXX)
 add_executable(RestaurantManagement
     src/main.cpp
     src/Order.cpp
+    src/NormalOrder.cpp
+    src/VeganOrder.cpp
+    src/VIPOrder.cpp
 )
 
 set_target_properties(RestaurantManagement PROPERTIES

@@ -10,8 +10,8 @@ enum OrderProgress
 
 enum OrderType
 {
-    NORMAL,
-    VEGAN,
+    Normal,
+    Vegan,
     VIP
 };
 
@@ -26,8 +26,10 @@ private:
     int size;
     double price;
 
-public:
+protected:
     Order(int ID, int arrivalTime, int size, double price);
+
+public:
     virtual ~Order() = default;
     int getID() const;
     int getArrivalTime() const;
