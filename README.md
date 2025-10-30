@@ -90,5 +90,5 @@ Regardless of the mode, the output file is always generated at the end of the si
 
 * Youssef Mohamed 202400956
 * Mazen Salem 202400447
-* Mahmoud Abdelwabab 202402046
+* Mahmoud Abdelwahab 202402046
 * Ahmed Nader 202401010
