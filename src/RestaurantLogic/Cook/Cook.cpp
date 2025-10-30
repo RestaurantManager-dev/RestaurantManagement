@@ -1,4 +1,4 @@
-#include "Cook.hpp"
+#include "RestaurantLogic/Cook/Cook.hpp"
 
 Cook::Cook(int ID, int speed, int breakDuration, int ordersBeforeBreak) : ID(ID), speed(speed), breakDuration(breakDuration), ordersBeforeBreak(ordersBeforeBreak)
 {
