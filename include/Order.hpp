@@ -1,6 +1,6 @@
 #pragma once
 
-enum class OrderProgress
+enum class OrderStatus
 {
     Waiting,
     InService,
@@ -22,7 +22,7 @@ private:
     int arrivalTime;
     int assignedTime;
     int finishTime;
-    OrderProgress progress;
+    OrderStatus status;
     int size;
     double price;
 
@@ -39,10 +39,10 @@ public:
     int getServiceTime() const;
     int getSize() const;
     double getPrice() const;
-    OrderProgress getProgress() const;
+    OrderStatus getStatus() const;
     void setAssignedTime(int assignedTime);
     void setFinishTime(int finishTime);
     void setPrice(double price);
-    void setProgress(OrderProgress progress);
+    void setStatus(OrderStatus Status);
     virtual OrderType getType() const = 0;
 };
