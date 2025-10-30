@@ -44,6 +44,6 @@ public:
     void setAssignedTime(int assignedTime);
     void setFinishTime(int finishTime);
     void setPrice(double price);
-    void setStatus(OrderStatus Status);
+    void setStatus(OrderStatus status);
     virtual OrderType getType() const = 0;
 };
