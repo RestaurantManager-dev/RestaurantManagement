@@ -10,6 +10,10 @@ add_library(RestaurantLogic
     src/logic/NormalOrder.cpp
     src/logic/VeganOrder.cpp
     src/logic/VIPOrder.cpp
+    src/logic/Cook.cpp
+    src/logic/NormalCook.cpp
+    src/logic/VeganCook.cpp
+    src/logic/VIPCook.cpp
 )
 
 target_include_directories(RestaurantLogic
