@@ -19,12 +19,13 @@ class Order
 {
 private:
     int ID;
+    int size;
+    double price;
+
     int arrivalTime;
     int assignedTime;
     int finishTime;
     OrderStatus status;
-    int size;
-    double price;
 
 protected:
     Order(int ID, int arrivalTime, int size, double price);
