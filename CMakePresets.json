@@ -5,7 +5,6 @@
             "name": "base-config",
             "hidden": true,
             "description": "Base settings for all configurations",
-            "generator": "MinGW Makefiles",
             "binaryDir": "${sourceDir}/build/${presetName}"
         },
         {
