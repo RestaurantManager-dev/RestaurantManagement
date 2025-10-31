@@ -104,10 +104,15 @@ T LinkedList<T>::remove(const T &data)
         prev = current;
         current = current->next;
     }
+    return nullptr;
 }
 
 template <typename T>
 T LinkedList<T>::peek() const
 {
+    if (isEmpty())
+    {
+        return nullptr;
+    }
     return head->data;
 }
