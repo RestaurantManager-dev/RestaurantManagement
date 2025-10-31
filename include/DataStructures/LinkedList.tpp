@@ -38,6 +38,8 @@ template <typename T>
 void LinkedList<T>::enqueue(const T &data)
 {
     Node *newNode = new Node;
+    newNode->data = data;
+    newNode->next = nullptr;
     if (isEmpty())
     {
         head = tail = newNode;
