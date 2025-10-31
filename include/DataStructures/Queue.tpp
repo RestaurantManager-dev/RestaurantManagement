@@ -77,5 +77,9 @@ bool Queue<T>::dequeue()
 template <typename T>
 T Queue<T>::peek() const
 {
+    if (isEmpty())
+    {
+        return nullptr;
+    }
     return head->data;
 }
