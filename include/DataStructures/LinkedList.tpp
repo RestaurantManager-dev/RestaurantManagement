@@ -58,7 +58,7 @@ bool LinkedList<T>::dequeue()
 {
     if (isEmpty())
     {
-        std::cerr << "Error: Attempt to dequeue from an empty linked list." << std::endl;
+        throw std::out_of_range("Error: Attempt to dequeue from an empty linked list.");
         return false;
     }
 
