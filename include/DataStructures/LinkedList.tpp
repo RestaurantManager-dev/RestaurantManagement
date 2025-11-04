@@ -106,8 +106,7 @@ T LinkedList<T>::remove(const T &data)
         prev = current;
         current = current->next;
     }
-    std::cerr << "Error: Attempt to remove non-existent element from linked list." << std::endl;
-    throw std::invalid_argument("Element not found in the list!");
+    throw std::invalid_argument("Error: Attempt to remove non-existent element from linked list.");
 }
 
 template <typename T>
@@ -115,8 +114,7 @@ T LinkedList<T>::peek() const
 {
     if (isEmpty())
     {
-        std::cerr << "Error: Attempt to peek from an empty linked list." << std::endl;
-        throw std::out_of_range("Linked List is empty!");
+        throw std::out_of_range("Error: Attempt to peek from an empty linked list.");
     }
     return head->data;
 }
