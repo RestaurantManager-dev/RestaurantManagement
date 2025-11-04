@@ -1,13 +1,12 @@
 #pragma once
 
+#include "DataStructures/LinkedList.hpp"
+
 template <typename T>
 class Queue
 {
 private:
-    class Node;
-
-    Node *head, *tail;
-    int size;
+    LinkedList<T> list;
 
 public:
     Queue();
