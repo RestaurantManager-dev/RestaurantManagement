@@ -1,5 +1,5 @@
 #include <stdexcept>
-#include "LinkedList.hpp"
+#include "DataStructures/LinkedList.hpp"
 
 template <typename T>
 class LinkedList<T>::Node

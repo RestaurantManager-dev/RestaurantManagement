@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Cook.hpp"
+#include "RestaurantLogic/Cook/Cook.hpp"
 
 class VeganCook : public Cook
 {

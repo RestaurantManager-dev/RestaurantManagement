@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Order.hpp"
+#include "RestaurantLogic/Order/Order.hpp"
 
 class VIPOrder : public Order
 {
