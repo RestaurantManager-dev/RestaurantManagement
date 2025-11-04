@@ -2,84 +2,40 @@
 #include "Queue.hpp"
 
 template <typename T>
-class Queue<T>::Node
-{
-public:
-    T data;
-    Node *next;
-};
-
-template <typename T>
-Queue<T>::Queue() : head(nullptr), tail(nullptr), size(0)
+Queue<T>::Queue()
 {
 }
 template <typename T>
 Queue<T>::~Queue()
 {
-    while (!isEmpty())
-    {
-        dequeue();
-    }
 }
 
 template <typename T>
 bool Queue<T>::isEmpty() const
 {
-    return size == 0;
+    return list.isEmpty();
 }
 
 template <typename T>
 int Queue<T>::getSize() const
 {
-    return size;
+    return list.getSize();
 }
 
 template <typename T>
 void Queue<T>::enqueue(const T &data)
 {
-    Node *newNode = new Node;
-    newNode->data = data;
-    newNode->next = nullptr;
-    if (isEmpty())
-    {
-        head = tail = newNode;
-    }
-    else
-    {
-        tail->next = newNode;
-        tail = newNode;
-    }
-    size++;
+    return list.enqueue(data);
 }
 
 template <typename T>
 bool Queue<T>::dequeue()
 {
-    if (isEmpty())
-    {
-        return false;
-    }
-
-    Node *temp = head->next;
-    delete head;
-    head = temp;
-
-    size--;
-
-    if (isEmpty())
-    {
-        tail = nullptr;
-    }
-
-    return true;
+    return list.dequeue();
 }
 
 template <typename T>
 T Queue<T>::peek() const
 {
-    if (isEmpty())
-    {
-        return nullptr;
-    }
-    return head->data;
+    return list.peek();
 }

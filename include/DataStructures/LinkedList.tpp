@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "LinkedList.hpp"
 
 template <typename T>
@@ -57,6 +58,7 @@ bool LinkedList<T>::dequeue()
 {
     if (isEmpty())
     {
+        std::cerr << "Error: Attempt to dequeue from an empty linked list." << std::endl;
         return false;
     }
 
@@ -104,7 +106,8 @@ T LinkedList<T>::remove(const T &data)
         prev = current;
         current = current->next;
     }
-    return nullptr;
+    std::cerr << "Error: Attempt to remove non-existent element from linked list." << std::endl;
+    throw std::invalid_argument("Element not found in the list!");
 }
 
 template <typename T>
@@ -112,7 +115,8 @@ T LinkedList<T>::peek() const
 {
     if (isEmpty())
     {
-        return nullptr;
+        std::cerr << "Error: Attempt to peek from an empty linked list." << std::endl;
+        throw std::out_of_range("Linked List is empty!");
     }
     return head->data;
 }
