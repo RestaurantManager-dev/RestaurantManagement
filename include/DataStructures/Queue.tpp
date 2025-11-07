@@ -1,4 +1,5 @@
 #include "DataStructures/Queue.hpp"
+#include "Queue.hpp"
 #include <stdexcept>
 
 template <typename T>
@@ -7,6 +8,7 @@ class Queue<T>::Node
 public:
     T data;
     Node *next;
+    Node *prev;
 };
 
 template <typename T>
@@ -36,11 +38,13 @@ bool Queue<T>::isEmpty() const
 }
 
 template <typename T>
-void Queue<T>::enqueue(const T &data)
+void *Queue<T>::enqueue(const T &data)
 {
     Node *newNode = new Node;
     newNode->data = data;
     newNode->next = nullptr;
+    newNode->prev = tail;
+
     if(isEmpty())
     {
         head = tail = newNode;
@@ -51,6 +55,7 @@ void Queue<T>::enqueue(const T &data)
         tail = newNode;
     }
     size++;
+    return (void *)newNode;
 }
 
 template <typename T>
@@ -62,50 +67,70 @@ void Queue<T>::dequeue()
             "Error: Attempt to dequeue from an empty linked list.");
     }
 
-    Node *temp = head->next;
-    delete head;
-    head = temp;
+    Node *temp = head;
+    head = head->next;
 
-    size--;
-
-    if(isEmpty())
+    if(head)
+    {
+        head->prev = nullptr;
+    }
+    else
     {
         tail = nullptr;
     }
+
+    delete temp;
+    size--;
 }
 
 template <typename T>
 T Queue<T>::remove(const T &data)
 {
     Node *current = head;
-    Node *prev = nullptr;
-
     while(current)
     {
         if(current->data == data)
         {
-            if(current == head)
-            {
-                head = current->next;
-            }
-            else
-            {
-                prev->next = current->next;
-            }
-            if(current == tail)
-            {
-                tail = prev;
-            }
-            T value = current->data;
-            delete current;
-            size--;
-            return value;
+            return removeNode((void *)current);
         }
-        prev = current;
         current = current->next;
     }
     throw std::invalid_argument(
         "Error: Attempt to remove non-existent element from linked list.");
+}
+
+template <typename T>
+T Queue<T>::removeNode(void *node)
+{
+    if(!node)
+    {
+        throw std::invalid_argument("Error: Attempt to remove a null node.");
+    }
+
+    Node *nodeToRemove = static_cast<Node *>(node);
+    T value = nodeToRemove->data;
+
+    if(nodeToRemove->prev)
+    {
+        nodeToRemove->prev->next = nodeToRemove->next;
+    }
+    else
+    {
+        head = nodeToRemove->next;
+    }
+
+    if(nodeToRemove->next)
+    {
+        nodeToRemove->next->prev = nodeToRemove->prev;
+    }
+    else
+    {
+        tail = nodeToRemove->prev;
+    }
+
+    delete nodeToRemove;
+    size--;
+    return value;
 }
 
 template <typename T>
