@@ -1,6 +1,8 @@
 #include "RestaurantLogic/Cook/NormalCook.hpp"
 
-NormalCook::NormalCook(int ID, int speed, int breakDuration, int ordersBeforeBreak) : Cook(ID, speed, breakDuration, ordersBeforeBreak)
+NormalCook::NormalCook(int ID, int speed, int breakDuration,
+                       int ordersBeforeBreak)
+    : Cook(ID, speed, breakDuration, ordersBeforeBreak)
 {
 }
 

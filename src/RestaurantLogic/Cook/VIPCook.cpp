@@ -1,6 +1,7 @@
 #include "RestaurantLogic/Cook/VIPCook.hpp"
 
-VIPCook::VIPCook(int ID, int speed, int breakDuration, int ordersBeforeBreak) : Cook(ID, speed, breakDuration, ordersBeforeBreak)
+VIPCook::VIPCook(int ID, int speed, int breakDuration, int ordersBeforeBreak)
+    : Cook(ID, speed, breakDuration, ordersBeforeBreak)
 {
 }
 

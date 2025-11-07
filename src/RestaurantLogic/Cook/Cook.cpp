@@ -1,6 +1,8 @@
 #include "RestaurantLogic/Cook/Cook.hpp"
 
-Cook::Cook(int ID, int speed, int breakDuration, int ordersBeforeBreak) : ID(ID), speed(speed), breakDuration(breakDuration), ordersBeforeBreak(ordersBeforeBreak)
+Cook::Cook(int ID, int speed, int breakDuration, int ordersBeforeBreak)
+    : ID(ID), speed(speed), breakDuration(breakDuration),
+      ordersBeforeBreak(ordersBeforeBreak)
 {
     status = CookStatus::Available;
     ordersServed = 0;
@@ -82,7 +84,7 @@ void Cook::setBreakStartTime(int time)
 bool Cook::serveOrder()
 {
     ordersServed++;
-    if (ordersServed >= ordersBeforeBreak)
+    if(ordersServed >= ordersBeforeBreak)
     {
         setStatus(CookStatus::OnBreak);
         setOrdersServed(0);

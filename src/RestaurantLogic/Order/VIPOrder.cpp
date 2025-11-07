@@ -1,6 +1,7 @@
 #include "RestaurantLogic/Order/VIPOrder.hpp"
 
-VIPOrder::VIPOrder(int ID, int arrivalTime, int size, double price) : Order(ID, arrivalTime, size, price)
+VIPOrder::VIPOrder(int ID, int arrivalTime, int size, double price)
+    : Order(ID, arrivalTime, size, price)
 {
 }
 
