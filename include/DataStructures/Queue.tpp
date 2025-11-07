@@ -54,13 +54,12 @@ void Queue<T>::enqueue(const T &data)
 }
 
 template <typename T>
-bool Queue<T>::dequeue()
+void Queue<T>::dequeue()
 {
     if(isEmpty())
     {
         throw std::out_of_range(
             "Error: Attempt to dequeue from an empty linked list.");
-        return false;
     }
 
     Node *temp = head->next;
@@ -73,8 +72,6 @@ bool Queue<T>::dequeue()
     {
         tail = nullptr;
     }
-
-    return true;
 }
 
 template <typename T>

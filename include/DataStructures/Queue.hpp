@@ -16,7 +16,7 @@ public:
     bool isEmpty() const;
 
     void enqueue(const T &data);
-    bool dequeue();
+    void dequeue();
 
     T remove(const T &data);
 
