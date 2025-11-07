@@ -1,0 +1,43 @@
+# Start with LLVM style
+BasedOnStyle: LLVM
+IndentWidth: 4
+
+# --- Your Current Rules ---
+
+# Braces on new lines (e.g., void func()\n{)
+BreakBeforeBraces: Allman
+
+# Pointers aligned right (e.g., Node *head)
+PointerAlignment: Right
+
+# Break after template declaration (e.g., template<...>\nclass)
+AlwaysBreakTemplateDeclarations: Yes
+
+# Outdent access modifiers (e.g., class {\npublic:\n})
+AccessModifierOffset: -4
+
+
+# --- Other Common Rules (Add or Remove as you like) ---
+
+# Set max line width to 100 characters
+# ColumnLimit: 100
+
+# Automatically sort #include directives
+SortIncludes: true
+
+# Control spacing in function calls (e.g., myFunction(arg))
+SpaceBeforeParens: Never
+
+# Align comments and consecutive statements
+AlignTrailingComments: true
+# AlignConsecutiveAssignments: true
+# AlignConsecutiveDeclarations: true
+
+# How to break long lines (before the operator)
+BreakBeforeBinaryOperators: NonAssignment
+
+# Don't allow 'if (a) return;' on one line
+AllowShortIfStatementsOnASingleLine: Never
+
+# Only allow empty functions on one line (e.g., void f() {})
+AllowShortFunctionsOnASingleLine: Empty

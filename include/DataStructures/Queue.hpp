@@ -1,22 +1,24 @@
 #pragma once
 
-#include "DataStructures/LinkedList.hpp"
-
 template <typename T>
 class Queue
 {
 private:
-    LinkedList<T> list;
+    class Node;
+    Node *head, *tail;
+    int size;
 
 public:
     Queue();
     ~Queue();
 
-    bool isEmpty() const;
     int getSize() const;
+    bool isEmpty() const;
 
     void enqueue(const T &data);
     bool dequeue();
+
+    T remove(const T &data);
 
     T peek() const;
 };

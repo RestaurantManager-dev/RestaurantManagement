@@ -19,7 +19,6 @@ compile_commands.json
 
 # --- User-Specific Files ---
 CMakeUserPresets.json
-.clang-format
 
 # --- IDE / Editor Folders ---
 # Visual Studio Code
