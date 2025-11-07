@@ -1,5 +1,4 @@
 #include "DataStructures/Queue.hpp"
-#include "Queue.hpp"
 #include <stdexcept>
 
 template <typename T>
