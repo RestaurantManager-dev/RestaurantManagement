@@ -15,10 +15,11 @@ public:
     int getSize() const;
     bool isEmpty() const;
 
-    void enqueue(const T &data);
+    void* enqueue(const T &data);
     void dequeue();
 
     T remove(const T &data);
+    T removeNode(void *node);
 
     T peek() const;
 };

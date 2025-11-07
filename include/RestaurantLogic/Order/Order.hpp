@@ -27,6 +27,8 @@ private:
     int finishTime;
     OrderStatus status;
 
+    void *queueNode;
+
 protected:
     Order(int ID, int arrivalTime, int size, double price);
 
@@ -41,9 +43,11 @@ public:
     int getSize() const;
     double getPrice() const;
     OrderStatus getStatus() const;
+    void *getQueueNode() const;
     void setAssignedTime(int assignedTime);
     void setFinishTime(int finishTime);
     void setPrice(double price);
     void setStatus(OrderStatus status);
+    void setQueueNode(void *node);
     virtual OrderType getType() const = 0;
 };
