@@ -1,6 +1,6 @@
+#include "DataStructures/Queue.hpp"
 #include <iostream>
 #include <stdexcept>
-#include "DataStructures/Queue.hpp"
 
 int main(int, char **)
 {
@@ -13,12 +13,14 @@ int main(int, char **)
         queue.enqueue(30);
         std::cout << "Front element is: " << queue.peek() << std::endl;
         queue.dequeue();
-        std::cout << "Front element after dequeue is: " << queue.peek() << std::endl;
+        std::cout << "Front element after dequeue is: " << queue.peek()
+                  << std::endl;
         queue.remove(20);
         queue.remove(20);
-        std::cout << "Front element after removing 20 is: " << queue.peek() << std::endl;
+        std::cout << "Front element after removing 20 is: " << queue.peek()
+                  << std::endl;
     }
-    catch (const std::exception &e)
+    catch(const std::exception &e)
     {
         std::cerr << "--------------------------" << std::endl;
         std::cerr << "CAUGHT AN EXCEPTION:" << std::endl;

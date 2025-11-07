@@ -1,6 +1,7 @@
 #include "RestaurantLogic/Order/NormalOrder.hpp"
 
-NormalOrder::NormalOrder(int ID, int arrivalTime, int size, double price) : Order(ID, arrivalTime, size, price)
+NormalOrder::NormalOrder(int ID, int arrivalTime, int size, double price)
+    : Order(ID, arrivalTime, size, price)
 {
 }
 
