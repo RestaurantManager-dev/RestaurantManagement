@@ -2,15 +2,6 @@
 #include <stdexcept>
 
 template <typename T>
-class Queue<T>::Node
-{
-public:
-    T data;
-    Node *next;
-    Node *prev;
-};
-
-template <typename T>
 Queue<T>::Queue() : head(nullptr), tail(nullptr), size(0)
 {
 }
@@ -18,10 +9,7 @@ Queue<T>::Queue() : head(nullptr), tail(nullptr), size(0)
 template <typename T>
 Queue<T>::~Queue()
 {
-    while(!isEmpty())
-    {
-        dequeue();
-    }
+    clear();
 }
 
 template <typename T>
@@ -37,108 +25,99 @@ bool Queue<T>::isEmpty() const
 }
 
 template <typename T>
-void *Queue<T>::enqueue(const T &data)
+void Queue<T>::enqueue(T *item)
 {
-    Node *newNode = new Node;
-    newNode->data = data;
-    newNode->next = nullptr;
-    newNode->prev = tail;
+    if(!item)
+    {
+        throw std::invalid_argument("Cannot enqueue null item");
+    }
+
+    if(item->prev != nullptr || item->next != nullptr)
+    {
+        throw std::invalid_argument("Item is already in a queue");
+    }
 
     if(isEmpty())
     {
-        head = tail = newNode;
+        head = tail = item;
+        item->prev = item->next = nullptr;
     }
     else
     {
-        tail->next = newNode;
-        tail = newNode;
+        tail->next = item;
+        item->prev = tail;
+        item->next = nullptr;
+        tail = item;
     }
     size++;
-    return (void *)newNode;
 }
 
 template <typename T>
-void Queue<T>::dequeue()
+T *Queue<T>::dequeue()
 {
     if(isEmpty())
     {
-        throw std::out_of_range(
-            "Error: Attempt to dequeue from an empty linked list.");
+        return nullptr;
     }
 
-    Node *temp = head;
-    head = head->next;
+    T *item = head;
+    remove(item);
+    return item;
+}
 
-    if(head)
+template <typename T>
+void Queue<T>::remove(T *item)
+{
+    if(!item)
     {
-        head->prev = nullptr;
+        return;
+    }
+
+    // Update the previous node's next pointer
+    if(item->prev)
+    {
+        item->prev->next = item->next;
     }
     else
     {
-        tail = nullptr;
+        // This was the head
+        head = item->next;
     }
 
-    delete temp;
+    // Update the next node's prev pointer
+    if(item->next)
+    {
+        item->next->prev = item->prev;
+    }
+    else
+    {
+        // This was the tail
+        tail = item->prev;
+    }
+
+    // Clear the item's pointers
+    item->prev = item->next = nullptr;
     size--;
 }
 
 template <typename T>
-T Queue<T>::remove(const T &data)
+T *Queue<T>::peek() const
 {
-    Node *current = head;
+    return head;
+}
+
+template <typename T>
+void Queue<T>::clear()
+{
+    // Just clear the links, don't delete items (they're not owned by the queue)
+    T *current = head;
     while(current)
     {
-        if(current->data == data)
-        {
-            return removeNode((void *)current);
-        }
-        current = current->next;
-    }
-    throw std::invalid_argument(
-        "Error: Attempt to remove non-existent element from linked list.");
-}
-
-template <typename T>
-T Queue<T>::removeNode(void *node)
-{
-    if(!node)
-    {
-        throw std::invalid_argument("Error: Attempt to remove a null node.");
+        T *next = current->next;
+        current->prev = current->next = nullptr;
+        current = next;
     }
 
-    Node *nodeToRemove = static_cast<Node *>(node);
-    T value = nodeToRemove->data;
-
-    if(nodeToRemove->prev)
-    {
-        nodeToRemove->prev->next = nodeToRemove->next;
-    }
-    else
-    {
-        head = nodeToRemove->next;
-    }
-
-    if(nodeToRemove->next)
-    {
-        nodeToRemove->next->prev = nodeToRemove->prev;
-    }
-    else
-    {
-        tail = nodeToRemove->prev;
-    }
-
-    delete nodeToRemove;
-    size--;
-    return value;
-}
-
-template <typename T>
-T Queue<T>::peek() const
-{
-    if(isEmpty())
-    {
-        throw std::out_of_range(
-            "Error: Attempt to peek from an empty linked list.");
-    }
-    return head->data;
+    head = tail = nullptr;
+    size = 0;
 }
