@@ -1,5 +1,7 @@
 #pragma once
 
+#include "DataStructures/Array.hpp"
+
 template <typename T>
 class PriorityComparator
 {
@@ -13,12 +15,9 @@ template <typename T, typename Comparator>
 class PriorityQueue
 {
 private:
-    T *heap;
-    int capacity;
-    int size;
+    Array<T> heap;
     Comparator compare;
 
-    void resize();
     int parent(int i);
     int leftChild(int i);
     int rightChild(int i);
@@ -28,7 +27,7 @@ private:
 
 public:
     PriorityQueue(Comparator comp = Comparator());
-    ~PriorityQueue();
+    ~PriorityQueue() = default;
 
     PriorityQueue(const PriorityQueue &) = delete;
     PriorityQueue &operator=(const PriorityQueue &) = delete;

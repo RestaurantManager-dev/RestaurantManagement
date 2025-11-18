@@ -3,28 +3,8 @@
 
 template <typename T, typename Comparator>
 PriorityQueue<T, Comparator>::PriorityQueue(Comparator comp)
-    : capacity(10), size(0), compare(comp)
+    : heap(10), compare(comp)
 {
-    heap = new T[capacity];
-}
-
-template <typename T, typename Comparator>
-PriorityQueue<T, Comparator>::~PriorityQueue()
-{
-    delete[] heap;
-}
-
-template <typename T, typename Comparator>
-void PriorityQueue<T, Comparator>::resize()
-{
-    capacity *= 2;
-    T *newHeap = new T[capacity];
-    for(int i = 0; i < size; i++)
-    {
-        newHeap[i] = heap[i];
-    }
-    delete[] heap;
-    heap = newHeap;
 }
 
 template <typename T, typename Comparator>
@@ -70,11 +50,11 @@ void PriorityQueue<T, Comparator>::heapifyDown(int index)
     int left = leftChild(index);
     int right = rightChild(index);
 
-    if(left < size && compare(heap[left], heap[bestIndex]))
+    if(left < heap.getSize() && compare(heap[left], heap[bestIndex]))
     {
         bestIndex = left;
     }
-    if(right < size && compare(heap[right], heap[bestIndex]))
+    if(right < heap.getSize() && compare(heap[right], heap[bestIndex]))
     {
         bestIndex = right;
     }
@@ -94,29 +74,23 @@ void PriorityQueue<T, Comparator>::insert(T item)
         throw std::invalid_argument("Cannot insert null item");
     }
 
-    if(size == capacity)
-    {
-        resize();
-    }
-
-    heap[size] = item;
-    heapifyUp(size);
-    size++;
+    heap.push(item);
+    heapifyUp(heap.getSize() - 1);
 }
 
 template <typename T, typename Comparator>
 T PriorityQueue<T, Comparator>::extract()
 {
-    if(size == 0)
+    if(heap.isEmpty())
     {
         return nullptr;
     }
 
     T best = heap[0];
-    heap[0] = heap[size - 1];
-    size--;
+    heap[0] = heap[heap.getSize() - 1];
+    heap.pop();
 
-    if(size > 0)
+    if(!heap.isEmpty())
     {
         heapifyDown(0);
     }
@@ -127,23 +101,23 @@ T PriorityQueue<T, Comparator>::extract()
 template <typename T, typename Comparator>
 T PriorityQueue<T, Comparator>::peek() const
 {
-    return size == 0 ? nullptr : heap[0];
+    return heap.isEmpty() ? nullptr : heap[0];
 }
 
 template <typename T, typename Comparator>
 bool PriorityQueue<T, Comparator>::isEmpty() const
 {
-    return size == 0;
+    return heap.isEmpty();
 }
 
 template <typename T, typename Comparator>
 int PriorityQueue<T, Comparator>::getSize() const
 {
-    return size;
+    return heap.getSize();
 }
 
 template <typename T, typename Comparator>
 void PriorityQueue<T, Comparator>::clear()
 {
-    size = 0;
+    heap.clear();
 }
