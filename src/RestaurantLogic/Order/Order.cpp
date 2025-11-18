@@ -1,12 +1,12 @@
 #include "RestaurantLogic/Order/Order.hpp"
 
 Order::Order(int ID, int arrivalTime, int size, double price)
-    : ID(ID), arrivalTime(arrivalTime), size(size), price(price)
+    : QueueNode<Order>(), ID(ID), arrivalTime(arrivalTime), size(size),
+      price(price)
 {
     status = OrderStatus::Waiting;
     assignedTime = -1;
     finishTime = -1;
-    queueNode = nullptr;
 }
 int Order::getID() const
 {
@@ -46,11 +46,6 @@ OrderStatus Order::getStatus() const
     return status;
 }
 
-void *Order::getQueueNode() const
-{
-    return queueNode;
-}
-
 void Order::setAssignedTime(int assignedTime)
 {
     this->assignedTime = assignedTime;
@@ -69,9 +64,4 @@ void Order::setPrice(double price)
 void Order::setStatus(OrderStatus status)
 {
     this->status = status;
-}
-
-void Order::setQueueNode(void *node)
-{
-    this->queueNode = node;
 }
