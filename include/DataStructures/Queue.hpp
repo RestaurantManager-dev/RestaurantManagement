@@ -9,6 +9,7 @@ class QueueNode
 private:
     Derived *prev = nullptr;
     Derived *next = nullptr;
+    bool inQueue = false;
 
 public:
     QueueNode() = default;
@@ -19,7 +20,7 @@ public:
 
     bool isInQueue() const
     {
-        return prev != nullptr || next != nullptr;
+        return inQueue;
     }
 };
 
