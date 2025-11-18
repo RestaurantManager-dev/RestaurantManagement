@@ -1,10 +1,11 @@
 #include "DataStructures/PriorityQueue.hpp"
 #include "RestaurantLogic/Order/VIPOrder.hpp"
+#include "DataStructures/HashMap.hpp"
 #include <iostream>
 
 int main()
 {
-    PriorityQueue<VIPOrder *, VIPOrder::Comparator> pq;
+    /* PriorityQueue<VIPOrder *, VIPOrder::Comparator> pq;
     // Create some VIP orders with different arrival times
     auto *o1 = new VIPOrder(101, 5, 2, 100.0); // arrives at 5
     auto *o2 = new VIPOrder(102, 1, 3, 200.0); // arrives at 1
@@ -37,6 +38,15 @@ int main()
         }
     }
 
-    std::cout << "PQ empty? " << (pq.isEmpty() ? "yes" : "no") << "\n";
+    std::cout << "PQ empty? " << (pq.isEmpty() ? "yes" : "no") << "\n";*/
+
+    HashMap<int> test(90);
+    test.Add(1, 40);
+    test.Add(2, 50);
+    test.Add(90, 100);
+    test.Add(0, 10);
+    test.Add(1, 90);
+    std::cout << test.Get(1); 
+
     return 0;
 }
