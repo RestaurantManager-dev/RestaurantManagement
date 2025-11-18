@@ -32,7 +32,7 @@ void Queue<T>::enqueue(T *item)
         throw std::invalid_argument("Cannot enqueue null item");
     }
 
-    if(item->prev != nullptr || item->next != nullptr)
+    if(item->inQueue)
     {
         throw std::invalid_argument("Item is already in a queue");
     }
@@ -49,6 +49,7 @@ void Queue<T>::enqueue(T *item)
         item->next = nullptr;
         tail = item;
     }
+    item->inQueue = true;
     size++;
 }
 
@@ -70,6 +71,12 @@ void Queue<T>::remove(T *item)
 {
     if(!item)
     {
+        return;
+    }
+
+    if(!item->inQueue)
+    {
+        // Nothing to do if it's not currently in this queue
         return;
     }
 
@@ -97,6 +104,7 @@ void Queue<T>::remove(T *item)
 
     // Clear the item's pointers
     item->prev = item->next = nullptr;
+    item->inQueue = false;
     size--;
 }
 
@@ -115,6 +123,7 @@ void Queue<T>::clear()
     {
         T *next = current->next;
         current->prev = current->next = nullptr;
+        current->inQueue = false;
         current = next;
     }
 

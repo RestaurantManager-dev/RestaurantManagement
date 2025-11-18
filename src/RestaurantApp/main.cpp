@@ -85,6 +85,7 @@ int main(int, char **)
         try
         {
             orderQueue.enqueue(order4);
+            std::cout << static_cast<int>(orderQueue.peek()->getType()) << orderQueue.getSize();
         }
         catch(const std::exception &e)
         {
