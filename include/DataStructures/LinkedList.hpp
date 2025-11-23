@@ -1,28 +1,20 @@
 #pragma once
 
-
 template <typename T>
 class Node
 {
 public:
-    Node() {
-        next = nullptr;
-    }
+    Node();
+    Node(T d);
+    ~Node();
 
+    void setData(T d);
+    void setNext(Node *n);
+    void setKey(int k);
 
-    Node(T d): data(d){
-        next = nullptr;
-        key = -1;
-    }
-    ~Node() {}
-
-    void setdata(T d) { data = d; }
-    void setnext(Node *n) { next = n; }
-    void setkey(int k) { key = k; }
-
-    T getdata() const { return data; }
-    Node *getnext() const { return next; }
-    int getkey() const { return key; }
+    T getData() const;
+    Node *getNext() const;
+    int getKey() const;
 
 private:
     int key;
@@ -30,15 +22,15 @@ private:
     Node *next;
 };
 
-
-template<typename T>
+template <typename T>
 class LinkedList
 {
 public:
-    LinkedList() {}
-
-    ~LinkedList() {}
+    LinkedList();
+    ~LinkedList();
 
 private:
-    Node<T> Head;
+    Node<T> head;
 };
+
+#include "DataStructures/LinkedList.tpp"
