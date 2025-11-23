@@ -1,5 +1,5 @@
 #pragma once
 
-#include "NormalOrder.hpp"
-#include "VIPOrder.hpp"
-#include "VeganOrder.hpp"
+#include "RestaurantLogic/Order/NormalOrder.hpp"
+#include "RestaurantLogic/Order/VIPOrder.hpp"
+#include "RestaurantLogic/Order/VeganOrder.hpp"

@@ -1,5 +1,5 @@
 #pragma once
 
-#include "NormalCook.hpp"
-#include "VIPCook.hpp"
-#include "VeganCook.hpp"
+#include "RestaurantLogic/Cook/NormalCook.hpp"
+#include "RestaurantLogic/Cook/VIPCook.hpp"
+#include "RestaurantLogic/Cook/VeganCook.hpp"

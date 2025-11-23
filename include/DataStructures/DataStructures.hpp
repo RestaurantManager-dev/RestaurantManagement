@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Array.hpp"
-#include "HashMap.hpp"
-#include "LinkedList.hpp"
-#include "PriorityQueue.hpp"
-#include "Queue.hpp"
+#include "DataStructures/Array.hpp"
+#include "DataStructures/HashMap.hpp"
+#include "DataStructures/LinkedList.hpp"
+#include "DataStructures/PriorityQueue.hpp"
+#include "DataStructures/Queue.hpp"

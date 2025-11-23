@@ -1,5 +1,5 @@
 #pragma once
 
-#include "Cook/Cooks.hpp"
-#include "Event/Events.hpp"
-#include "Order/Orders.hpp"
+#include "RestaurantLogic/Cook/Cooks.hpp"
+#include "RestaurantLogic/Event/Events.hpp"
+#include "RestaurantLogic/Order/Orders.hpp"
