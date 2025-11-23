@@ -7,8 +7,8 @@ class QueueNode
     friend class Queue;
 
 private:
-    Derived *prev = nullptr;
-    Derived *next = nullptr;
+    Derived prev = nullptr;
+    Derived next = nullptr;
     bool inQueue = false;
 
 public:
@@ -28,8 +28,8 @@ template <typename T>
 class Queue
 {
 private:
-    T *head;
-    T *tail;
+    T head;
+    T tail;
     int size;
 
 public:
@@ -42,10 +42,10 @@ public:
     int getSize() const;
     bool isEmpty() const;
 
-    void enqueue(T *item);
-    T *dequeue();
-    void remove(T *item);
-    T *peek() const;
+    void enqueue(T item);
+    T dequeue();
+    void remove(T item);
+    T peek() const;
     void clear();
 };
 
