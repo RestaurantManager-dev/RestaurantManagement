@@ -1,8 +1,7 @@
 #include "RestaurantLogic/Order/Order.hpp"
 
 Order::Order(int ID, int arrivalTime, int size, double price)
-    : QueueNode<Order>(), ID(ID), arrivalTime(arrivalTime), size(size),
-      price(price)
+    : ID(ID), arrivalTime(arrivalTime), size(size), price(price)
 {
     status = OrderStatus::Waiting;
     assignedTime = -1;

@@ -1,4 +1,5 @@
 #pragma once
+#include "DataStructures/Queue.hpp"
 
 enum class CookType
 {
@@ -14,7 +15,7 @@ enum class CookStatus
     OnBreak
 };
 
-class Cook
+class Cook : public QueueNode<Cook *>
 {
 private:
     int ID;

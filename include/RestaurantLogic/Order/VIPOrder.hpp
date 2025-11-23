@@ -11,10 +11,10 @@ public:
     virtual OrderType getType() const override;
 
     // Nested comparator: earlier arrival time = higher priority
-    class Comparator : public PriorityComparator<VIPOrder *>
+    class Comparator : public PriorityComparator<Order *>
     {
     public:
-        bool operator()(VIPOrder *a, VIPOrder *b) const override
+        bool operator()(Order *a, Order *b) const override
         {
             return a->getArrivalTime() < b->getArrivalTime();
         }

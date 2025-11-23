@@ -1,5 +1,5 @@
 #pragma once
 
-#include "ArrivalEvent.hpp"
-#include "CancellationEvent.hpp"
-#include "PromotionEvent.hpp"
+#include "RestaurantLogic/Event/ArrivalEvent.hpp"
+#include "RestaurantLogic/Event/CancellationEvent.hpp"
+#include "RestaurantLogic/Event/PromotionEvent.hpp"

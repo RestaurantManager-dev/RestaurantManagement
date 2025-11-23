@@ -25,7 +25,7 @@ bool Queue<T>::isEmpty() const
 }
 
 template <typename T>
-void Queue<T>::enqueue(T *item)
+void Queue<T>::enqueue(T item)
 {
     if(!item)
     {
@@ -54,20 +54,35 @@ void Queue<T>::enqueue(T *item)
 }
 
 template <typename T>
-T *Queue<T>::dequeue()
+T Queue<T>::dequeue()
 {
     if(isEmpty())
     {
         return nullptr;
     }
 
-    T *item = head;
-    remove(item);
+    T item = head;
+    head = head->next;
+
+    if(head)
+    {
+        head->prev = nullptr;
+    }
+    else
+    {
+        tail = nullptr;
+    }
+
+    item->next = nullptr;
+    item->prev = nullptr;
+    item->inQueue = false;
+    size--;
+
     return item;
 }
 
 template <typename T>
-void Queue<T>::remove(T *item)
+void Queue<T>::remove(T item)
 {
     if(!item)
     {
@@ -109,7 +124,7 @@ void Queue<T>::remove(T *item)
 }
 
 template <typename T>
-T *Queue<T>::peek() const
+T Queue<T>::peek() const
 {
     return head;
 }
@@ -118,10 +133,10 @@ template <typename T>
 void Queue<T>::clear()
 {
     // Just clear the links, don't delete items (they're not owned by the queue)
-    T *current = head;
+    T current = head;
     while(current)
     {
-        T *next = current->next;
+        T next = current->next;
         current->prev = current->next = nullptr;
         current->inQueue = false;
         current = next;
