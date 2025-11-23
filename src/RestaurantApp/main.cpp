@@ -1,8 +1,11 @@
 #include "DataStructures/HashMap.hpp"
 #include <iostream>
+#include "RestaurantApp/Resturant.h"
 
 int main()
 {
+    Resturant restaurant;
+    restaurant.excuteTimestep();
 
     std::cout << "\n=== HashMap Tests ===" << std::endl;
     HashMap<int> hashMap(10);

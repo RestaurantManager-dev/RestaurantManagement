@@ -7,8 +7,9 @@ class QueueNode
     friend class Queue;
 
 private:
-    Derived *prev = nullptr;
-    Derived *next = nullptr;
+    // Shouldn't this be QueueNode<Derived> as well?
+    QueueNode<Derived> *prev = nullptr;
+    QueueNode<Derived> *next = nullptr;
     bool inQueue = false;
 
 public:
@@ -28,8 +29,9 @@ template <typename T>
 class Queue
 {
 private:
-    T *head;
-    T *tail;
+    // Shouldn't this be QueueNode<T>?
+    QueueNode<T> *head;
+    QueueNode<T> *tail;
     int size;
 
 public:

@@ -46,6 +46,10 @@ int Cook::getCurrentOrderID() const
     return currentOrderID;
 }
 
+int Cook::getEndtimeOfCurrentOrder() const {
+    return endtimeOfCurrentOrder;
+}
+
 int Cook::getAssignedTime() const
 {
     return assignedTime;

@@ -21,7 +21,7 @@ file(GLOB_RECURSE LOGIC_SOURCES
     "src/RestaurantLogic/*.cpp"
 )
 
-add_library(RestaurantLogic ${LOGIC_SOURCES})
+add_library(RestaurantLogic ${LOGIC_SOURCES} "src/RestaurantApp/Resturant.cpp" "include/RestaurantApp/Resturant.h")
 
 target_include_directories(RestaurantLogic
     PUBLIC
@@ -42,7 +42,7 @@ file(GLOB_RECURSE APP_SOURCES
 
 add_executable(RestaurantApp
     ${APP_SOURCES}
-)
+ "src/RestaurantApp/Resturant.cpp" "include/RestaurantApp/Resturant.h")
 
 target_link_libraries(RestaurantApp
     PRIVATE

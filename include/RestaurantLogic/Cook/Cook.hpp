@@ -24,6 +24,8 @@ private:
 
     CookStatus status;
     int ordersServed;
+    // I don't need the full order id here, just the end time.
+    int endtimeOfCurrentOrder;
     int currentOrderID;
     int assignedTime;
     int breakStartTime;
@@ -38,6 +40,7 @@ public:
     int getSpeed() const;
     CookStatus getStatus() const;
     int getOrdersServed() const;
+    int getEndtimeOfCurrentOrder() const;
     int getBreakDuration() const;
     int getOrdersBeforeBreak() const;
     int getCurrentOrderID() const;

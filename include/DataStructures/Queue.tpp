@@ -118,10 +118,10 @@ template <typename T>
 void Queue<T>::clear()
 {
     // Just clear the links, don't delete items (they're not owned by the queue)
-    T *current = head;
+    QueueNode<T> *current = head;
     while(current)
     {
-        T *next = current->next;
+        QueueNode<T> *next = current->next;
         current->prev = current->next = nullptr;
         current->inQueue = false;
         current = next;
