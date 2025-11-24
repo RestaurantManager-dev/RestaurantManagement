@@ -49,6 +49,13 @@ target_link_libraries(RestaurantApp
         RestaurantLogic
 )
 
+
+# See. I told you YOU were stupid not CMAKE.
+target_compile_definitions(RestaurantApp
+    PRIVATE
+        INPUT_FILE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/src/RestaurantApp/input.txt"
+)
+
 # --- Set Binary Output Directories ---
 
 set_target_properties(RestaurantApp PROPERTIES
