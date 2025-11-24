@@ -9,3 +9,5 @@ EventType PromotionEvent::getType() const
 {
     return EventType::Promotion;
 }
+
+void PromotionEvent::GetData(std::string data) {}

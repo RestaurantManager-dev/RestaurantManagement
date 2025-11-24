@@ -8,4 +8,6 @@ public:
     ArrivalEvent(int timeStep);
     ~ArrivalEvent() = default;
     EventType getType() const override;
+    // TODO: implement GetData
+    void GetData(std::string data) override;
 };

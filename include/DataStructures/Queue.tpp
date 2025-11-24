@@ -25,49 +25,54 @@ bool Queue<T>::isEmpty() const
 }
 
 template <typename T>
-void Queue<T>::enqueue(T *item)
+void Queue<T>::enqueue(T item)
 {
     if(!item)
     {
         throw std::invalid_argument("Cannot enqueue null item");
     }
-
+    // Allow Duplicats
+    /* 
     if(item->inQueue)
     {
         throw std::invalid_argument("Item is already in a queue");
-    }
+    }*/
 
     if(isEmpty())
     {
-        head = tail = item;
-        item->prev = item->next = nullptr;
+        QueueNode<T> *newNode = new QueueNode<T>;
+        newNode->data = item;
+        head = tail = newNode;
+        newNode->inQueue = true;
     }
     else
     {
-        tail->next = item;
-        item->prev = tail;
-        item->next = nullptr;
-        tail = item;
+        QueueNode<T> *newNode = new QueueNode<T>;
+        newNode->data = item;
+        tail->next = newNode;
+        newNode->prev = tail;
+
+        tail = newNode;
+        newNode->inQueue = true;
     }
-    item->inQueue = true;
     size++;
 }
 
 template <typename T>
-T *Queue<T>::dequeue()
+QueueNode<T> *Queue<T>::dequeue()
 {
     if(isEmpty())
     {
         return nullptr;
     }
 
-    T *item = head;
+    QueueNode<T> *item = head;
     remove(item);
     return item;
 }
 
 template <typename T>
-void Queue<T>::remove(T *item)
+void Queue<T>::remove(QueueNode<T> *item)
 {
     if(!item)
     {
@@ -109,7 +114,7 @@ void Queue<T>::remove(T *item)
 }
 
 template <typename T>
-T *Queue<T>::peek() const
+QueueNode<T> *Queue<T>::peek() const
 {
     return head;
 }

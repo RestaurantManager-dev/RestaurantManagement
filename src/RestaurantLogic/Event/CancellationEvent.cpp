@@ -9,3 +9,7 @@ EventType CancellationEvent::getType() const
 {
     return EventType::Cancellation;
 }
+
+void CancellationEvent::GetData(std::string data) {
+
+}

@@ -8,4 +8,5 @@ public:
     PromotionEvent(int timeStep);
     ~PromotionEvent() = default;
     EventType getType() const override;
+    void GetData(std::string data) override;
 };

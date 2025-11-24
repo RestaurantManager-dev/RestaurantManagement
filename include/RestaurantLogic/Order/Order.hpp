@@ -16,7 +16,7 @@ enum class OrderType
     VIP
 };
 
-class Order : public QueueNode<Order>
+class Order : public QueueNode<Order* >
 {
 private:
     int ID;

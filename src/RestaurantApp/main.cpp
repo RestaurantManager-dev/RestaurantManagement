@@ -5,8 +5,8 @@
 int main()
 {
     Resturant restaurant;
-    restaurant.excuteTimestep();
-
+    /*restaurant.excuteTimestep();
+    
     std::cout << "\n=== HashMap Tests ===" << std::endl;
     HashMap<int> hashMap(10);
 
@@ -56,6 +56,6 @@ int main()
     std::cout << "Key 15: " << stringMap.get(15) << std::endl;
 
     std::cout << "\nAll tests completed!" << std::endl;
-
+    */
     return 0;
 }

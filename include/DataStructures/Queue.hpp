@@ -8,13 +8,19 @@ class QueueNode
 
 private:
     // Shouldn't this be QueueNode<Derived> as well?
+    // WHERE ON EARTH IS THE DATA TO BE STORED IN THE FIRST PLACE
     QueueNode<Derived> *prev = nullptr;
     QueueNode<Derived> *next = nullptr;
+    Derived data;
     bool inQueue = false;
 
 public:
     QueueNode() = default;
     virtual ~QueueNode() = default;
+
+    QueueNode(Derived D) {
+        data = D;
+    }
 
     QueueNode(const QueueNode &) = delete;
     QueueNode &operator=(const QueueNode &) = delete;
@@ -24,6 +30,7 @@ public:
         return inQueue;
     }
 };
+
 
 template <typename T>
 class Queue
@@ -44,10 +51,10 @@ public:
     int getSize() const;
     bool isEmpty() const;
 
-    void enqueue(T *item);
-    T *dequeue();
-    void remove(T *item);
-    T *peek() const;
+    void enqueue(T item);
+    QueueNode<T> *dequeue();
+    void remove(QueueNode<T> *item);
+    QueueNode<T> *peek() const;
     void clear();
 };
 

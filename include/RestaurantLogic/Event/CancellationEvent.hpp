@@ -8,4 +8,5 @@ public:
     CancellationEvent(int timeStep);
     ~CancellationEvent() = default;
     EventType getType() const override;
+    void GetData(std::string data) override;
 };

@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 enum class EventType
 {
@@ -18,4 +19,5 @@ public:
     int getTimeStep() const;
     void setTimeStep(int timeStep);
     virtual EventType getType() const = 0;
+    virtual void GetData(std::string data) = 0;
 };

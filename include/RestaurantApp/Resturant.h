@@ -3,6 +3,11 @@
 #include "DataStructures/Queue.hpp"
 #include "DataStructures/PriorityQueue.hpp"
 #include "RestaurantLogic/RestaurantLogic.hpp"
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
 
 
 class OrderComparitor : PriorityComparator <Order *>
@@ -36,13 +41,21 @@ public:
     }
 };
 
-
 class CookFinishCompare : PriorityComparator<Cook *>
 {
     public:
     bool operator()(Cook *a, Cook *b) const override
     {
         return a->getEndtimeOfCurrentOrder() < b->getEndtimeOfCurrentOrder();
+    }
+};
+
+class EventCompartor : PriorityComparator<Event *>
+{
+public:
+    bool operator()(Event *a, Event *b) const override
+    {
+        return a->getTimeStep() < b->getTimeStep();
     }
 };
 
@@ -88,18 +101,22 @@ private:
     */
     PriorityQueue<Order *, OrderFinishComparitor> InServiceNormalOrders;
 
-    Queue<Order *> FinishedOrders;
+    Queue<Order* > FinishedOrders;
 
     
 
     HashMap<Cook *> AllCooks;
 
-    Queue<Cook *> AvailableVIPCooks;
-    Queue<Cook *> AvailableVeganCooks;
-    Queue<Cook *> AvailableNormalCooks;
+    Queue<Cook* > AvailableVIPCooks;
+    Queue<Cook* > AvailableVeganCooks;
+    Queue<Cook* > AvailableNormalCooks;
 
     PriorityQueue<Cook *, CookFinishCompare> InServiceCooks;
     
-    Queue<Cook *> InBreakCooks;
+    Queue<Cook* > InBreakCooks;
+
+
+    // Note that the documentation did say that the events are sorted
+    PriorityQueue<Event *, EventCompartor> Events;
 
 };

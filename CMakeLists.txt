@@ -42,7 +42,7 @@ file(GLOB_RECURSE APP_SOURCES
 
 add_executable(RestaurantApp
     ${APP_SOURCES}
- "src/RestaurantApp/Resturant.cpp" "include/RestaurantApp/Resturant.h")
+ "src/RestaurantApp/Resturant.cpp" "include/RestaurantApp/Resturant.h" "input.txt")
 
 target_link_libraries(RestaurantApp
     PRIVATE
