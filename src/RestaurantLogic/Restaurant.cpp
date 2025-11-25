@@ -77,7 +77,7 @@ void Restaurant::loadFiles(std::string filePath)
             dynamic_cast<ArrivalEvent*>(event)->setOrderDetails(
                                                                 static_cast<OrderType>(type),
                                                                 id, size, total);
-            eventsQueue.insert(event);
+            eventsQueue.enqueue(event);
         }
         else if(evtype == 'X')
         {
@@ -86,7 +86,7 @@ void Restaurant::loadFiles(std::string filePath)
             Event *event = new CancellationEvent(cantime);
             dynamic_cast<CancellationEvent *>(event)->setOrderId(id);
 
-            eventsQueue.insert(event);
+            eventsQueue.enqueue(event);
         }
         else if(evtype == 'P')
         {
@@ -97,7 +97,7 @@ void Restaurant::loadFiles(std::string filePath)
             dynamic_cast<PromotionEvent *>(event)->setOrderID(id);
             dynamic_cast<PromotionEvent *>(event)->setExtraMoney(prototal);
 
-            eventsQueue.insert(event);
+            eventsQueue.enqueue(event);
         }
     }
 

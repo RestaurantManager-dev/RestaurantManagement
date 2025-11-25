@@ -41,7 +41,7 @@ private:
     Queue<Cook *> onBreakVeganCooks;
     Queue<Cook *> onBreakVIPCooks;
 
-    PriorityQueue<Event *, Event::Comparator> eventsQueue;
+    Queue<Event *> eventsQueue;
 
 public:
     Restaurant();

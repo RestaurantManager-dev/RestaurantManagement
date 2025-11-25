@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DataStructures/PriorityQueue.hpp"
+#include "DataStructures/Queue.hpp"
 #include "RestaurantLogic/Order/Order.hpp"
 
 enum class EventType
@@ -10,7 +10,7 @@ enum class EventType
     Promotion
 };
 
-class Event
+class Event : public QueueNode<Event *>
 {
 private:
     int timeStep;
@@ -21,13 +21,4 @@ public:
     int getTimeStep() const;
     void setTimeStep(int timeStep);
     virtual EventType getType() const = 0;
-
-    class Comparator : public PriorityComparator<Event *>
-    {
-    public:
-        bool operator()(Event *a, Event *b) const override
-        {
-            return a->getTimeStep() < b->getTimeStep();
-        }
-    };
 };
