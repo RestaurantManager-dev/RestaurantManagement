@@ -3,6 +3,7 @@
 #include "DataStructures/DataStructures.hpp"
 #include "RestaurantLogic/Cook/Cooks.hpp"
 #include "RestaurantLogic/Event/Events.hpp"
+#include "RestaurantLogic/Event/Event.hpp"
 #include "RestaurantLogic/Order/Orders.hpp"
 
 #include <string>

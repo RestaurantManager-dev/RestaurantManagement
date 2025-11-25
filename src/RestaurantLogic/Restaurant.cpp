@@ -102,26 +102,53 @@ void Restaurant::loadFiles(std::string filePath)
 
 void Restaurant::writeOutput() const {}
 
-void Restaurant::executeEvents()
-{
-    /*if(type == 'N')
+void Restaurant::executeEvents() {
+    if(eventsQueue.isEmpty())
+        return;
+
+    Event *event = eventsQueue.peek();
+    while(event->getTimeStep() == this->CurrentTimeStep)
     {
-        Order *order = new NormalOrder(id, artime, size, total);
-        waitingNormalOrders.enqueue(order);
-        orderMap.add(id, order);
+        if(event->getType() == EventType::Arrival)
+        {
+            ArrivalEvent* Arevent = dynamic_cast<ArrivalEvent *>(event);
+            if(Arevent->getOrderType() == OrderType::Normal)
+            {
+                Order *order = new NormalOrder(Arevent->getorderid(), Arevent->getTimeStep(), Arevent->getordersize(), Arevent->getordertotal());
+                waitingNormalOrders.enqueue(order);
+                orderMap.add(order->getID(), order);
+            }
+            else if(Arevent->getOrderType() == OrderType::Vegan)
+            {
+                Order *order = new VeganOrder(
+                    Arevent->getorderid(), Arevent->getTimeStep(),
+                    Arevent->getordersize(), Arevent->getordertotal());
+                waitingVeganOrders.enqueue(order);
+                orderMap.add(order->getID(), order);
+            }
+            else
+            {
+                Order *order = new VIPOrder(
+                    Arevent->getorderid(), Arevent->getTimeStep(),
+                    Arevent->getordersize(), Arevent->getordertotal());
+                waitingVIPOrders.insert(order);
+                orderMap.add(order->getID(), order);
+            }
+        }
+        else if(event->getType() == EventType::Cancellation)
+        {
+            CancellationEvent *Cevent = dynamic_cast<CancellationEvent *>(event);
+            int orderId = Cevent->getOrderId();
+            Order *order = orderMap.get(orderId);
+            waitingNormalOrders.remove(order);
+            orderMap.remove(orderId);
+            delete order;
+        }
+        else if(event->getType() == EventType::Promotion)
+        {
+            // TODO
+        }
     }
-    else if(type == 'G')
-    {
-        Order *order = new VeganOrder(id, artime, size, total);
-        waitingVeganOrders.enqueue(order);
-        orderMap.add(id, order);
-    }
-    else if(type == 'V')
-    {
-        Order *order = new VIPOrder(id, artime, size, total);
-        waitingVIPOrders.insert(order);
-        orderMap.add(id, order);
-    }*/
 }
 
 void Restaurant::simulate()
