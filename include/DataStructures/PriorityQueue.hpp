@@ -32,8 +32,8 @@ public:
     PriorityQueue(const PriorityQueue &) = delete;
     PriorityQueue &operator=(const PriorityQueue &) = delete;
 
-    void insert(T item);
-    T extract();
+    void enqueue(T item);
+    T dequeue();
     T peek() const;
     bool isEmpty() const;
     int getSize() const;

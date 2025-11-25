@@ -67,7 +67,7 @@ void PriorityQueue<T, Comparator>::heapifyDown(int index)
 }
 
 template <typename T, typename Comparator>
-void PriorityQueue<T, Comparator>::insert(T item)
+void PriorityQueue<T, Comparator>::enqueue(T item)
 {
     if(!item)
     {
@@ -79,7 +79,7 @@ void PriorityQueue<T, Comparator>::insert(T item)
 }
 
 template <typename T, typename Comparator>
-T PriorityQueue<T, Comparator>::extract()
+T PriorityQueue<T, Comparator>::dequeue()
 {
     if(heap.isEmpty())
     {

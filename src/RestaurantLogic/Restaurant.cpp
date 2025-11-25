@@ -149,7 +149,7 @@ void Restaurant::executeEvents()
                 Order *order = new VIPOrder(
                     Arevent->getorderid(), Arevent->getTimeStep(),
                     Arevent->getordersize(), Arevent->getordertotal());
-                waitingVIPOrders.insert(order);
+                waitingVIPOrders.enqueue(order);
                 orderMap.add(order->getID(), order);
             }
         }
@@ -182,7 +182,7 @@ void Restaurant::simulate()
     {
         executeEvents();
 
-        Order *vipOrder = waitingVIPOrders.extract();
+        Order *vipOrder = waitingVIPOrders.dequeue();
         if(vipOrder)
         {
             std::cout << "VIP Order ID: " << vipOrder->getID() << std::endl;
