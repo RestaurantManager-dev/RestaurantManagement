@@ -3,6 +3,7 @@
 #include "DataStructures/DataStructures.hpp"
 #include "RestaurantLogic/Cook/Cooks.hpp"
 #include "RestaurantLogic/Event/Events.hpp"
+#include "RestaurantLogic/Event/Event.hpp"
 #include "RestaurantLogic/Order/Orders.hpp"
 
 #include <string>
@@ -51,5 +52,5 @@ public:
     bool isOverloaded() const;
     void loadFiles(std::string filePath);
     void writeOutput() const;
-    void excuteTimeStep();
+    void executeEvents();
 };
