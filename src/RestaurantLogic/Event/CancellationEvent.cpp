@@ -9,3 +9,13 @@ EventType CancellationEvent::getType() const
 {
     return EventType::Cancellation;
 }
+
+void CancellationEvent::setOrderId(int id)
+{
+    orderId = id;
+}
+
+int CancellationEvent::getOrderId() const
+{
+    return orderId;
+}

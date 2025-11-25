@@ -1,7 +1,5 @@
 #include "RestaurantLogic/Restaurant.hpp"
 
-#include <fstream>
-#include <iostream>
 
 Restaurant::Restaurant() : orderMap(10007), cookMap(10007)
 {
@@ -13,18 +11,18 @@ Restaurant::Restaurant() : orderMap(10007), cookMap(10007)
 
 bool Restaurant::isOverloaded() const
 {
-    return false;
+    return waitingVIPOrders.getSize() >= VIPOrdersOverloadThreshold;
 }
 
 void Restaurant::loadFiles(std::string filePath)
 {
-    std::ifstream file(filePath);
+    ifstream file(filePath);
     if(!file.is_open())
     {
-        std::cout << "Can't open" << std::endl;
+        cout << "Can't open" << std::endl;
     }
-    std::cout << "File opened successfully" << std::endl;
-    std::string line;
+    cout << "File opened successfully" << std::endl;
+    string line;
 
     // Number of cooks
     int N, G, V;
@@ -36,8 +34,7 @@ void Restaurant::loadFiles(std::string filePath)
     file >> SN >> SG >> SV;
     file >> Bo >> BN >> BG >> BV;
 
-    // Notice that we will need the pointer to the cooks/orders queue node not
-    // the class
+
     int id = 0;
     for(int i = 0; i < N; i++)
     {
@@ -74,43 +71,31 @@ void Restaurant::loadFiles(std::string filePath)
             char type;
             int artime, id, size, total;
             file >> type >> artime >> id >> size >> total;
-            if(type == 'N')
-            {
-                Order *order = new NormalOrder(id, artime, size, total);
-                waitingNormalOrders.enqueue(order);
-                orderMap.add(id, order);
-            }
-            else if(type == 'G')
-            {
-                Order *order = new VeganOrder(id, artime, size, total);
-                waitingVeganOrders.enqueue(order);
-                orderMap.add(id, order);
-            }
-            else if(type == 'V')
-            {
-                Order *order = new VIPOrder(id, artime, size, total);
-                waitingVIPOrders.insert(order);
-                orderMap.add(id, order);
-            }
 
-            // TODO: FIX
             Event *event = new ArrivalEvent(artime);
+            dynamic_cast<ArrivalEvent*>(event)->setOrderDetails(
+                                                                static_cast<OrderType>(type),
+                                                                id, size, total);
             eventsQueue.insert(event);
         }
         else if(evtype == 'X')
         {
-            std::string s;
-            file >> s;
-            // TODO: FIX
-            Event *event = new CancellationEvent(0);
+            int cantime, id;
+            file >> cantime >> id;
+            Event *event = new CancellationEvent(cantime);
+            dynamic_cast<CancellationEvent *>(event)->setOrderId(id);
+
             eventsQueue.insert(event);
         }
         else if(evtype == 'P')
         {
-            std::string s;
-            file >> s;
-            // TODO: FIX
-            Event *event = new PromotionEvent(0);
+            int protime, id, prototal;
+            file >> protime >> id >> prototal;
+           
+            Event *event = new PromotionEvent(protime);
+            dynamic_cast<PromotionEvent *>(event)->setOrderID(id);
+            dynamic_cast<PromotionEvent *>(event)->setExtraMoney(prototal);
+
             eventsQueue.insert(event);
         }
     }
@@ -120,6 +105,27 @@ void Restaurant::loadFiles(std::string filePath)
 
 void Restaurant::writeOutput() const {}
 
-void Restaurant::excuteTimeStep() {}
+void Restaurant::excuteTimeStep() {
+    /*if(type == 'N')
+    {
+        Order *order = new NormalOrder(id, artime, size, total);
+        waitingNormalOrders.enqueue(order);
+        orderMap.add(id, order);
+    }
+    else if(type == 'G')
+    {
+        Order *order = new VeganOrder(id, artime, size, total);
+        waitingVeganOrders.enqueue(order);
+        orderMap.add(id, order);
+    }
+    else if(type == 'V')
+    {
+        Order *order = new VIPOrder(id, artime, size, total);
+        waitingVIPOrders.insert(order);
+        orderMap.add(id, order);
+    }*/
+}
 
-void Restaurant::simulate() {}
+void Restaurant::simulate() {
+
+}

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DataStructures/PriorityQueue.hpp"
+#include "RestaurantLogic/Order/Order.hpp"
 
 enum class EventType
 {
@@ -19,7 +20,6 @@ public:
     virtual ~Event() = default;
     int getTimeStep() const;
     void setTimeStep(int timeStep);
-    // void GetData ?? was in Mazen's branch
     virtual EventType getType() const = 0;
 
     class Comparator : public PriorityComparator<Event *>

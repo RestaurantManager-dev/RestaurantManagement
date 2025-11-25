@@ -11,6 +11,7 @@ public:
     virtual OrderType getType() const override;
 
     // Nested comparator: earlier arrival time = higher priority
+    // you didn't include the order size nor the price
     class Comparator : public PriorityComparator<Order *>
     {
     public:
