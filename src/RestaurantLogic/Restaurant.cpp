@@ -1,6 +1,5 @@
 #include "RestaurantLogic/Restaurant.hpp"
 
-
 Restaurant::Restaurant() : orderMap(10007), cookMap(10007)
 {
     VIPOrdersOverloadThreshold = 5;
@@ -16,13 +15,13 @@ bool Restaurant::isOverloaded() const
 
 void Restaurant::loadFiles(std::string filePath)
 {
-    ifstream file(filePath);
+    std::ifstream file(filePath);
     if(!file.is_open())
     {
-        cout << "Can't open" << std::endl;
+        std::cout << "Can't open" << std::endl;
     }
-    cout << "File opened successfully" << std::endl;
-    string line;
+    std::cout << "File opened successfully" << std::endl;
+    std::string line;
 
     // Number of cooks
     int N, G, V;
@@ -33,8 +32,6 @@ void Restaurant::loadFiles(std::string filePath)
     file >> N >> G >> V;
     file >> SN >> SG >> SV;
     file >> Bo >> BN >> BG >> BV;
-
-
 
     int id = 0;
     for(int i = 0; i < N; i++)
@@ -74,9 +71,8 @@ void Restaurant::loadFiles(std::string filePath)
             file >> type >> artime >> id >> size >> total;
 
             Event *event = new ArrivalEvent(artime);
-            dynamic_cast<ArrivalEvent*>(event)->setOrderDetails(
-                                                                static_cast<OrderType>(type),
-                                                                id, size, total);
+            dynamic_cast<ArrivalEvent *>(event)->setOrderDetails(
+                static_cast<OrderType>(type), id, size, total);
             eventsQueue.enqueue(event);
         }
         else if(evtype == 'X')
@@ -92,7 +88,7 @@ void Restaurant::loadFiles(std::string filePath)
         {
             int protime, id, prototal;
             file >> protime >> id >> prototal;
-           
+
             Event *event = new PromotionEvent(protime);
             dynamic_cast<PromotionEvent *>(event)->setOrderID(id);
             dynamic_cast<PromotionEvent *>(event)->setExtraMoney(prototal);
@@ -155,4 +151,32 @@ void Restaurant::executeEvents() {
     }
 }
 
-void Restaurant::simulate() {}
+void Restaurant::simulate()
+{
+    executeEvents();
+    while(!eventsQueue.isEmpty())
+    {
+        Order *normalOrder = waitingNormalOrders.dequeue();
+        std::cout << "Normal Order ID: " << normalOrder->getID() << std::endl;
+        Order *veganOrder = waitingVeganOrders.dequeue();
+        std::cout << "Vegan Order ID: " << veganOrder->getID() << std::endl;
+        Order *vipOrder = waitingVIPOrders.extract();
+        std::cout << "VIP Order ID: " << vipOrder->getID() << std::endl;
+        inServiceNormalOrders.enqueue(waitingNormalOrders.dequeue());
+        inServiceVeganOrders.enqueue(waitingVeganOrders.dequeue());
+        inServiceVIPOrders.enqueue(waitingVIPOrders.extract());
+        if(CurrentTimeStep % 5 == 0)
+        {
+            finishedOrders.enqueue(inServiceNormalOrders.dequeue());
+            std::cout << "Finished Normal Order ID: "
+                      << finishedOrders.peek()->getID() << std::endl;
+            finishedOrders.enqueue(inServiceVeganOrders.dequeue());
+            std::cout << "Finished Vegan Order ID: "
+                      << finishedOrders.peek()->getID() << std::endl;
+            finishedOrders.enqueue(inServiceVIPOrders.dequeue());
+            std::cout << "Finished VIP Order ID: "
+                      << finishedOrders.peek()->getID() << std::endl;
+        }
+        CurrentTimeStep++;
+    }
+}
