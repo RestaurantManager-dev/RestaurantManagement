@@ -241,8 +241,5 @@ void Restaurant::simulate()
             }
         }
         CurrentTimeStep++;
-
-        if(CurrentTimeStep > 100)
-            break;
     }
 }
