@@ -69,10 +69,24 @@ void Restaurant::loadFiles(std::string filePath)
             char type;
             int artime, id, size, total;
             file >> type >> artime >> id >> size >> total;
+            OrderType typenum;
 
             Event *event = new ArrivalEvent(artime);
-            dynamic_cast<ArrivalEvent *>(event)->setOrderDetails(
-                static_cast<OrderType>(type), id, size, total);
+            
+            if(type == 'N')
+            {
+                typenum = OrderType::Normal;
+            }
+            else if(type == 'G')
+            {
+                typenum = OrderType::Vegan;
+            }
+            else if(type == 'V')
+            {
+                typenum = OrderType::VIP;
+            }
+
+            dynamic_cast<ArrivalEvent *>(event)->setOrderDetails(typenum, id, size, total);
             eventsQueue.enqueue(event);
         }
         else if(evtype == 'X')
@@ -107,7 +121,7 @@ void Restaurant::executeEvents() {
         return;
 
     Event *event = eventsQueue.peek();
-    while(event->getTimeStep() == this->CurrentTimeStep)
+    while(event && event->getTimeStep() <= this->CurrentTimeStep)
     {
         if(event->getType() == EventType::Arrival)
         {
@@ -148,35 +162,65 @@ void Restaurant::executeEvents() {
         {
             // TODO
         }
+
+        eventsQueue.dequeue();
+        event = eventsQueue.peek();
     }
 }
 
 void Restaurant::simulate()
 {
-    executeEvents();
-    while(!eventsQueue.isEmpty())
+    while(true)
     {
+        executeEvents();
         Order *normalOrder = waitingNormalOrders.dequeue();
-        std::cout << "Normal Order ID: " << normalOrder->getID() << std::endl;
+        if(normalOrder)
+        {
+            std::cout << "Normal Order ID: " << normalOrder->getID() << std::endl;
+            inServiceNormalOrders.enqueue(normalOrder);
+        }
+
         Order *veganOrder = waitingVeganOrders.dequeue();
-        std::cout << "Vegan Order ID: " << veganOrder->getID() << std::endl;
-        Order *vipOrder = waitingVIPOrders.extract();
-        std::cout << "VIP Order ID: " << vipOrder->getID() << std::endl;
-        inServiceNormalOrders.enqueue(waitingNormalOrders.dequeue());
-        inServiceVeganOrders.enqueue(waitingVeganOrders.dequeue());
-        inServiceVIPOrders.enqueue(waitingVIPOrders.extract());
+        if(veganOrder)
+        {
+            std::cout << "Vegan Order ID: " << veganOrder->getID() << std::endl;
+            inServiceVeganOrders.enqueue(veganOrder);
+        }
+
+       Order *vipOrder = waitingVIPOrders.extract();
+       if (vipOrder) {
+            std::cout << "VIP Order ID: " << vipOrder->getID() << std::endl;
+            inServiceVIPOrders.enqueue(vipOrder);
+        }
+        
+    
         if(CurrentTimeStep % 5 == 0)
         {
-            finishedOrders.enqueue(inServiceNormalOrders.dequeue());
-            std::cout << "Finished Normal Order ID: "
-                      << finishedOrders.peek()->getID() << std::endl;
-            finishedOrders.enqueue(inServiceVeganOrders.dequeue());
-            std::cout << "Finished Vegan Order ID: "
-                      << finishedOrders.peek()->getID() << std::endl;
-            finishedOrders.enqueue(inServiceVIPOrders.dequeue());
-            std::cout << "Finished VIP Order ID: "
-                      << finishedOrders.peek()->getID() << std::endl;
+            if(!inServiceNormalOrders.isEmpty())
+            {
+                finishedOrders.enqueue(inServiceNormalOrders.dequeue());
+                std::cout << "Finished Normal Order ID: "
+                          << finishedOrders.peek()->getID() << std::endl;
+            }
+            
+            if(!inServiceVeganOrders.isEmpty())
+            {            
+                finishedOrders.enqueue(inServiceVeganOrders.dequeue());
+                std::cout << "Finished Vegan Order ID: "
+                          << finishedOrders.peek()->getID() << std::endl;
+            }
+
+            if(!inServiceVIPOrders.isEmpty())
+            {
+                finishedOrders.enqueue(inServiceVIPOrders.dequeue());
+                std::cout << "Finished VIP Order ID: "
+                          << finishedOrders.peek()->getID() << std::endl;
+            }
         }
         CurrentTimeStep++;
+
+        if(CurrentTimeStep > 100)
+            break;
+        
     }
 }

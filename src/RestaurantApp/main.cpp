@@ -7,5 +7,6 @@ int main()
 {
     Restaurant restaurant;
     restaurant.loadFiles(INPUT_FILE_PATH);
+    restaurant.simulate();
     return 0;
 }
