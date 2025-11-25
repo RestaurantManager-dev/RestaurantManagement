@@ -8,7 +8,6 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-using namespace std;
 
 class Restaurant
 {
@@ -51,5 +50,5 @@ public:
     bool isOverloaded() const;
     void loadFiles(std::string filePath);
     void writeOutput() const;
-    void excuteTimeStep();
+    void executeEvents();
 };
