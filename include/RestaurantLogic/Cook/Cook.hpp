@@ -27,6 +27,7 @@ private:
     CookStatus status;
     int ordersServed;
     int currentOrderID;
+    int currentOrderSize;
     int endTimeOfCurrentOrder;
     int assignedTime;
     int breakStartTime;
@@ -46,6 +47,7 @@ public:
     int getCurrentOrderID() const;
     int getAssignedTime() const;
     int getBreakStartTime() const;
+    int getCurrentOrderSize() const;
 
     void setStatus(CookStatus status);
     void setOrdersServed(int count);
@@ -53,6 +55,7 @@ public:
     void setCurrentOrderID(int orderID);
     void setAssignedTime(int time);
     void setBreakStartTime(int time);
+    void setCurrentOrderSize(int size);
 
     bool serveOrder();
 
@@ -64,9 +67,9 @@ public:
         bool operator()(Cook *a, Cook *b) const override
         {
             int aFinishTime =
-                a->getAssignedTime() + (a->getCurrentOrderID() == -1 ? 0 : 1);
+                a->getAssignedTime() + (a->getCurrentOrderID() == -1 ? 0 : a->getCurrentOrderSize() / a->getSpeed());
             int bFinishTime =
-                b->getAssignedTime() + (b->getCurrentOrderID() == -1 ? 0 : 1);
+                b->getAssignedTime() + (b->getCurrentOrderID() == -1 ? 0 : b->getCurrentOrderSize() / b->getSpeed());
             return aFinishTime < bFinishTime;
         }
     };

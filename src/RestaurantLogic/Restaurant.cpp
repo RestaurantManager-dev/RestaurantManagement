@@ -35,6 +35,7 @@ void Restaurant::loadFiles(std::string filePath)
     file >> Bo >> BN >> BG >> BV;
 
 
+
     int id = 0;
     for(int i = 0; i < N; i++)
     {
@@ -126,6 +127,4 @@ void Restaurant::excuteTimeStep() {
     }*/
 }
 
-void Restaurant::simulate() {
-
-}
+void Restaurant::simulate() {}

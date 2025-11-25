@@ -11,13 +11,14 @@ public:
     virtual OrderType getType() const override;
 
     // Nested comparator: earlier arrival time = higher priority
-    // you didn't include the order size nor the price
     class Comparator : public PriorityComparator<Order *>
     {
     public:
         bool operator()(Order *a, Order *b) const override
         {
-            return a->getArrivalTime() < b->getArrivalTime();
+            int scorea = -a->getArrivalTime() + a->getSize() + a->getPrice();
+            int scoreb = -b->getArrivalTime() + b->getSize() + b->getPrice(); 
+            return scorea > scoreb;
         }
     };
 };

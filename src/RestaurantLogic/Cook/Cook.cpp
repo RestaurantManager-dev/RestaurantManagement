@@ -97,3 +97,12 @@ bool Cook::serveOrder()
     }
     return true;
 }
+
+int Cook::getCurrentOrderSize() const
+{
+    return currentOrderSize;
+}
+void Cook::setCurrentOrderSize(int size)
+{
+    this->currentOrderSize = size;
+}
