@@ -178,7 +178,10 @@ void Restaurant::executeEvents()
 
 void Restaurant::simulate()
 {
-    while(true)
+    while(!waitingNormalOrders.isEmpty() || !waitingVeganOrders.isEmpty()
+          || !waitingVIPOrders.isEmpty() || !inServiceNormalOrders.isEmpty()
+          || !inServiceVeganOrders.isEmpty() || !inServiceVIPOrders.isEmpty()
+          || !eventsQueue.isEmpty())
     {
         executeEvents();
 
