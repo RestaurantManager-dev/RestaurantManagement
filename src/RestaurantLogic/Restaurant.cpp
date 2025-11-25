@@ -72,7 +72,7 @@ void Restaurant::loadFiles(std::string filePath)
             OrderType typenum;
 
             Event *event = new ArrivalEvent(artime);
-            
+
             if(type == 'N')
             {
                 typenum = OrderType::Normal;
@@ -86,7 +86,8 @@ void Restaurant::loadFiles(std::string filePath)
                 typenum = OrderType::VIP;
             }
 
-            dynamic_cast<ArrivalEvent *>(event)->setOrderDetails(typenum, id, size, total);
+            dynamic_cast<ArrivalEvent *>(event)->setOrderDetails(typenum, id,
+                                                                 size, total);
             eventsQueue.enqueue(event);
         }
         else if(evtype == 'X')
@@ -116,7 +117,8 @@ void Restaurant::loadFiles(std::string filePath)
 
 void Restaurant::writeOutput() const {}
 
-void Restaurant::executeEvents() {
+void Restaurant::executeEvents()
+{
     if(eventsQueue.isEmpty())
         return;
 
@@ -125,10 +127,12 @@ void Restaurant::executeEvents() {
     {
         if(event->getType() == EventType::Arrival)
         {
-            ArrivalEvent* Arevent = dynamic_cast<ArrivalEvent *>(event);
+            ArrivalEvent *Arevent = dynamic_cast<ArrivalEvent *>(event);
             if(Arevent->getOrderType() == OrderType::Normal)
             {
-                Order *order = new NormalOrder(Arevent->getorderid(), Arevent->getTimeStep(), Arevent->getordersize(), Arevent->getordertotal());
+                Order *order = new NormalOrder(
+                    Arevent->getorderid(), Arevent->getTimeStep(),
+                    Arevent->getordersize(), Arevent->getordertotal());
                 waitingNormalOrders.enqueue(order);
                 orderMap.add(order->getID(), order);
             }
@@ -151,12 +155,16 @@ void Restaurant::executeEvents() {
         }
         else if(event->getType() == EventType::Cancellation)
         {
-            CancellationEvent *Cevent = dynamic_cast<CancellationEvent *>(event);
+            CancellationEvent *Cevent =
+                dynamic_cast<CancellationEvent *>(event);
             int orderId = Cevent->getOrderId();
             Order *order = orderMap.get(orderId);
-            waitingNormalOrders.remove(order);
-            orderMap.remove(orderId);
-            delete order;
+            if(order && order->getStatus() == OrderStatus::Waiting)
+            {
+                waitingNormalOrders.remove(order);
+                orderMap.remove(orderId);
+                delete order;
+            }
         }
         else if(event->getType() == EventType::Promotion)
         {
@@ -173,10 +181,21 @@ void Restaurant::simulate()
     while(true)
     {
         executeEvents();
+
+        Order *vipOrder = waitingVIPOrders.extract();
+        if(vipOrder)
+        {
+            std::cout << "VIP Order ID: " << vipOrder->getID() << std::endl;
+            vipOrder->setStatus(OrderStatus::InService);
+            inServiceVIPOrders.enqueue(vipOrder);
+        }
+
         Order *normalOrder = waitingNormalOrders.dequeue();
         if(normalOrder)
         {
-            std::cout << "Normal Order ID: " << normalOrder->getID() << std::endl;
+            std::cout << "Normal Order ID: " << normalOrder->getID()
+                      << std::endl;
+            normalOrder->setStatus(OrderStatus::InService);
             inServiceNormalOrders.enqueue(normalOrder);
         }
 
@@ -184,43 +203,43 @@ void Restaurant::simulate()
         if(veganOrder)
         {
             std::cout << "Vegan Order ID: " << veganOrder->getID() << std::endl;
+            veganOrder->setStatus(OrderStatus::InService);
             inServiceVeganOrders.enqueue(veganOrder);
         }
 
-       Order *vipOrder = waitingVIPOrders.extract();
-       if (vipOrder) {
-            std::cout << "VIP Order ID: " << vipOrder->getID() << std::endl;
-            inServiceVIPOrders.enqueue(vipOrder);
-        }
-        
-    
         if(CurrentTimeStep % 5 == 0)
         {
-            if(!inServiceNormalOrders.isEmpty())
-            {
-                finishedOrders.enqueue(inServiceNormalOrders.dequeue());
-                std::cout << "Finished Normal Order ID: "
-                          << finishedOrders.peek()->getID() << std::endl;
-            }
-            
-            if(!inServiceVeganOrders.isEmpty())
-            {            
-                finishedOrders.enqueue(inServiceVeganOrders.dequeue());
-                std::cout << "Finished Vegan Order ID: "
-                          << finishedOrders.peek()->getID() << std::endl;
-            }
 
             if(!inServiceVIPOrders.isEmpty())
             {
-                finishedOrders.enqueue(inServiceVIPOrders.dequeue());
-                std::cout << "Finished VIP Order ID: "
-                          << finishedOrders.peek()->getID() << std::endl;
+                Order *finished = inServiceVIPOrders.dequeue();
+                finished->setStatus(OrderStatus::Finished);
+                finishedOrders.enqueue(finished);
+                std::cout << "Finished VIP Order ID: " << finished->getID()
+                          << std::endl;
+            }
+
+            if(!inServiceNormalOrders.isEmpty())
+            {
+                Order *finished = inServiceNormalOrders.dequeue();
+                finished->setStatus(OrderStatus::Finished);
+                finishedOrders.enqueue(finished);
+                std::cout << "Finished Normal Order ID: " << finished->getID()
+                          << std::endl;
+            }
+
+            if(!inServiceVeganOrders.isEmpty())
+            {
+                Order *finished = inServiceVeganOrders.dequeue();
+                finished->setStatus(OrderStatus::Finished);
+                finishedOrders.enqueue(finished);
+                std::cout << "Finished Vegan Order ID: " << finished->getID()
+                          << std::endl;
             }
         }
         CurrentTimeStep++;
 
         if(CurrentTimeStep > 100)
             break;
-        
     }
 }
