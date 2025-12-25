@@ -6,6 +6,10 @@
 #include "RestaurantLogic/Event/Event.hpp"
 #include "RestaurantLogic/Order/Orders.hpp"
 
+#include "GUI/GUI.h"
+#include "GUI/Defs.h"
+#include "CMUgraphicsLib/auxil.h"
+
 #include <string>
 #include <fstream>
 #include <iostream>
@@ -43,13 +47,20 @@ private:
 
     Queue<Event *> eventsQueue;
 
+    PROG_MODE mode;
+    
+    GUI *gui;
+    
+
 public:
     Restaurant();
-    ~Restaurant() = default;
+    ~Restaurant();
 
     void simulate();
     bool isOverloaded() const;
     void loadFiles(std::string filePath);
     void writeOutput() const;
     void executeEvents();
+    void ExecuteTimeStep();
+    void Finish();
 };

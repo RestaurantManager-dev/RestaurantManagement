@@ -6,7 +6,8 @@ enum class CookType
 {
     Normal,
     Vegan,
-    VIP
+    VIP,
+    TypeCount
 };
 
 enum class CookStatus

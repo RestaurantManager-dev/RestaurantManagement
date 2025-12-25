@@ -6,6 +6,13 @@ Restaurant::Restaurant() : orderMap(10007), cookMap(10007)
     // Will be changed from load file
     NormalOrdersPromoteThreshold = -1;
     CurrentTimeStep = 0;
+    gui = nullptr;
+}
+
+Restaurant::~Restaurant() {
+    if(gui)
+        delete gui;
+    gui = nullptr;
 }
 
 bool Restaurant::isOverloaded() const
@@ -176,70 +183,125 @@ void Restaurant::executeEvents()
     }
 }
 
+void Restaurant::ExecuteTimeStep() {
+    executeEvents();
+
+    Order *vipOrder = waitingVIPOrders.dequeue();
+    if(vipOrder)
+    {
+        std::cout << "VIP Order ID: " << vipOrder->getID() << std::endl;
+        vipOrder->setStatus(OrderStatus::InService);
+        inServiceVIPOrders.enqueue(vipOrder);
+    }
+
+    Order *normalOrder = waitingNormalOrders.dequeue();
+    if(normalOrder)
+    {
+        std::cout << "Normal Order ID: " << normalOrder->getID() << std::endl;
+        normalOrder->setStatus(OrderStatus::InService);
+        inServiceNormalOrders.enqueue(normalOrder);
+    }
+
+    Order *veganOrder = waitingVeganOrders.dequeue();
+    if(veganOrder)
+    {
+        std::cout << "Vegan Order ID: " << veganOrder->getID() << std::endl;
+        veganOrder->setStatus(OrderStatus::InService);
+        inServiceVeganOrders.enqueue(veganOrder);
+    }
+
+    if(CurrentTimeStep % 5 == 0)
+    {
+
+        if(!inServiceVIPOrders.isEmpty())
+        {
+            Order *finished = inServiceVIPOrders.dequeue();
+            finished->setStatus(OrderStatus::Finished);
+            finishedOrders.enqueue(finished);
+            std::cout << "Finished VIP Order ID: " << finished->getID()
+                      << std::endl;
+        }
+
+        if(!inServiceNormalOrders.isEmpty())
+        {
+            Order *finished = inServiceNormalOrders.dequeue();
+            finished->setStatus(OrderStatus::Finished);
+            finishedOrders.enqueue(finished);
+            std::cout << "Finished Normal Order ID: " << finished->getID()
+                      << std::endl;
+        }
+
+        if(!inServiceVeganOrders.isEmpty())
+        {
+            Order *finished = inServiceVeganOrders.dequeue();
+            finished->setStatus(OrderStatus::Finished);
+            finishedOrders.enqueue(finished);
+            std::cout << "Finished Vegan Order ID: " << finished->getID()
+                      << std::endl;
+        }
+    }
+    CurrentTimeStep++;
+}
+
+void Restaurant::Finish() {
+
+}
+
 void Restaurant::simulate()
 {
-    while(!waitingNormalOrders.isEmpty() || !waitingVeganOrders.isEmpty()
-          || !waitingVIPOrders.isEmpty() || !inServiceNormalOrders.isEmpty()
-          || !inServiceVeganOrders.isEmpty() || !inServiceVIPOrders.isEmpty()
-          || !eventsQueue.isEmpty())
+    gui = new GUI();
+    mode = gui->getGUIMode();
+
+    while(1)
     {
-        executeEvents();
-
-        Order *vipOrder = waitingVIPOrders.dequeue();
-        if(vipOrder)
+        if(mode == MODE_SLNT)
         {
-            std::cout << "VIP Order ID: " << vipOrder->getID() << std::endl;
-            vipOrder->setStatus(OrderStatus::InService);
-            inServiceVIPOrders.enqueue(vipOrder);
-        }
-
-        Order *normalOrder = waitingNormalOrders.dequeue();
-        if(normalOrder)
-        {
-            std::cout << "Normal Order ID: " << normalOrder->getID()
-                      << std::endl;
-            normalOrder->setStatus(OrderStatus::InService);
-            inServiceNormalOrders.enqueue(normalOrder);
-        }
-
-        Order *veganOrder = waitingVeganOrders.dequeue();
-        if(veganOrder)
-        {
-            std::cout << "Vegan Order ID: " << veganOrder->getID() << std::endl;
-            veganOrder->setStatus(OrderStatus::InService);
-            inServiceVeganOrders.enqueue(veganOrder);
-        }
-
-        if(CurrentTimeStep % 5 == 0)
-        {
-
-            if(!inServiceVIPOrders.isEmpty())
+            while(!waitingNormalOrders.isEmpty() || !waitingVeganOrders.isEmpty()
+               || !waitingVIPOrders.isEmpty()
+               || !inServiceNormalOrders.isEmpty()
+               || !inServiceVeganOrders.isEmpty()
+               || !inServiceVIPOrders.isEmpty() || !eventsQueue.isEmpty())
             {
-                Order *finished = inServiceVIPOrders.dequeue();
-                finished->setStatus(OrderStatus::Finished);
-                finishedOrders.enqueue(finished);
-                std::cout << "Finished VIP Order ID: " << finished->getID()
-                          << std::endl;
+                ExecuteTimeStep();
             }
-
-            if(!inServiceNormalOrders.isEmpty())
+            break;
+        }
+        else if(mode == MODE_INTR)
+        {
+            // Waits for a mouse click for advances
+            gui->waitForClick();
+            if (!waitingNormalOrders.isEmpty() || !waitingVeganOrders.isEmpty()
+                || !waitingVIPOrders.isEmpty()
+                || !inServiceNormalOrders.isEmpty()
+                || !inServiceVeganOrders.isEmpty()
+               || !inServiceVIPOrders.isEmpty() || !eventsQueue.isEmpty())
             {
-                Order *finished = inServiceNormalOrders.dequeue();
-                finished->setStatus(OrderStatus::Finished);
-                finishedOrders.enqueue(finished);
-                std::cout << "Finished Normal Order ID: " << finished->getID()
-                          << std::endl;
+                ExecuteTimeStep();
             }
-
-            if(!inServiceVeganOrders.isEmpty())
+            else
             {
-                Order *finished = inServiceVeganOrders.dequeue();
-                finished->setStatus(OrderStatus::Finished);
-                finishedOrders.enqueue(finished);
-                std::cout << "Finished Vegan Order ID: " << finished->getID()
-                          << std::endl;
+                Finish();
             }
         }
-        CurrentTimeStep++;
+        else if(mode == MODE_STEP)
+        {
+            // waits for one second for advances
+            Pause(1000);
+
+            if(!waitingNormalOrders.isEmpty() || !waitingVeganOrders.isEmpty()
+               || !waitingVIPOrders.isEmpty()
+               || !inServiceNormalOrders.isEmpty()
+               || !inServiceVeganOrders.isEmpty()
+               || !inServiceVIPOrders.isEmpty() || !eventsQueue.isEmpty())
+            {
+                ExecuteTimeStep();
+            }
+            else
+            {
+                Finish();
+            }
+        }
     }
+
+    writeOutput();
 }
