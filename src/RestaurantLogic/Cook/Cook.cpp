@@ -13,7 +13,12 @@ Cook::Cook(int ID, int speed, int breakDuration, int ordersBeforeBreak)
     fatigue = .9;
     injuryduration = 10;
     injuryprop = .1;
-
+    normalordercount = 0;
+    veganordercount = 0;
+    vipordercount = 0;
+    bucount = 0;
+    idcount = 0;
+    brcount = 0;
    // breakStartTime = 0;
 }
 
@@ -146,6 +151,19 @@ void Cook::assignorder(Order *order, int timestep) {
     order->setStatus(OrderStatus::InService);
 
     endTimeOfCurrentOrder = timestep + (order->getSize() / speed);
+
+    if(order->getType() == OrderType::Normal)
+    {
+        normalordercount++;
+    }
+    else if(order->getType() == OrderType::Vegan)
+    {
+        veganordercount++;
+    }
+    else
+    {
+        vipordercount++;
+    }
 }
 
 bool Cook::finishedbreak(int timestep) {
@@ -173,4 +191,19 @@ bool Cook::finishedinjury(int timestep)
 
 void Cook::increasefatigue() {
     fatigue = fatigue - .1;
+}
+
+void Cook::updatecount() {
+    if(status == CookStatus::Available)
+    {
+        idcount++;
+    }
+    else if(status == CookStatus::Busy)
+    {
+        bucount++;
+    }
+    else
+    {
+        brcount++;
+    }
 }

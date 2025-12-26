@@ -42,10 +42,21 @@ private:
 
     double fatigue;
 
+    int normalordercount, veganordercount, vipordercount, bucount, idcount,
+        brcount;
+
 protected:
     Cook(int ID, int speed, int breakDuration, int ordersBeforeBreak);
 
 public:
+    int getnormalordercount() const { return normalordercount; }
+    int getveganordercount() const { return veganordercount; }
+    int getvipordercount() const { return vipordercount; }
+    int getbucount() const { return bucount; }
+    int getidcount() const { return idcount; }
+    int getbrcount() const { return brcount; }
+
+
     virtual ~Cook() = default;
 
     int getID() const;
@@ -70,6 +81,8 @@ public:
     bool finishedbreak(int timestep);
     bool finishedinjury(int timestep);
     void increasefatigue();
+    void updatecount();
+
 
 
     bool serveOrder(int time);

@@ -8,6 +8,7 @@ Restaurant::Restaurant() : orderMap(10007), cookMap(10007)
     NormalOrdersPromoteThreshold = -1;
     CurrentTimeStep = 0;
     msg = "";
+    autopromotedcount = 0;
 }
 
 Restaurant::~Restaurant() {
@@ -129,8 +130,111 @@ void Restaurant::loadFiles(std::string filePath)
     file.close();
 }
 
-void Restaurant::writeOutput() const {
-    // Make sure it only runs once
+void Restaurant::writeOutput() {
+    static bool first = true;
+
+    if(first)
+    {
+        std::ofstream file("output.txt");
+        if(!file.is_open())
+        {
+            first = true;
+            return;
+        }
+        
+        Order *normal_order = finishedNormalOrders.peek();
+        Order *vegan_order = finishedVeganOrders.peek();
+        Order *vip_order = finishedVIPOrders.peek();
+
+        double sumwait = 0, sumser = 0;
+
+        file << "FT ID AT WT ST\n";
+
+        while(normal_order || vegan_order || vip_order)
+        {
+            long long nf = normal_order ? normal_order->getFinishTime() : -1;
+            long long vf = vegan_order ? vegan_order->getFinishTime() : -1;
+            long long vif = vip_order ? vip_order->getFinishTime() : -1;
+            
+            if((nf <= vf || vf == -1) && (nf <= vif || vif == -1) && nf != -1)
+            {
+                sumser += normal_order->getServiceTime();
+                sumwait += normal_order->getWaitingTime();
+                file << normal_order->getFinishTime() << " "
+                     << normal_order->getID()
+                     << " " << normal_order->getArrivalTime() << " "
+                     << normal_order->getWaitingTime() << " "
+                     << normal_order->getServiceTime() << " ";
+                finishedNormalOrders.dequeue();
+            }
+            else if((vf <= nf || nf == -1) && (vf <= vif || vif == -1) && vf != -1)
+            {
+                sumser += vegan_order->getServiceTime();
+                sumwait += vegan_order->getWaitingTime();
+                file << vegan_order->getFinishTime() << vegan_order->getID()
+                     << " "
+                     << vegan_order->getArrivalTime() << " "
+                     << vegan_order->getWaitingTime() << " "
+                     << vegan_order->getServiceTime() << " ";
+                finishedVeganOrders.dequeue();
+            }
+            else if((vif <= nf || nf == -1) && (vif <= vf || vf == -1) && vif != -1)
+            {
+                sumser += vip_order->getServiceTime();
+                sumwait += vip_order->getWaitingTime();
+                file << vip_order->getFinishTime() << vip_order->getID() << " "
+                     << vip_order->getArrivalTime() << " "
+                     << vip_order->getWaitingTime() << " "
+                     << vip_order->getServiceTime();
+                finishedVIPOrders.dequeue();
+            }
+
+            normal_order = finishedNormalOrders.peek();
+            vegan_order = finishedVeganOrders.peek();
+            vip_order = finishedVIPOrders.peek();
+            file << "\n";
+        }
+
+
+        file << "Orders: " << order_ids.getSize()
+             << "[Norm: " << finishedNormalOrders.getSize()
+             << ", Veg: " << finishedVeganOrders.getSize()
+             << ", VIP: " << finishedVIPOrders.getSize() << "]\n";
+
+        file << "Cooks: " << cook_ids.getSize() << "[Norm: "
+             << availableNormalCooks.getSize() + injuredNormalCooks.getSize() + onBreakNormalCooks.getSize()
+             << ", Veg: "
+             << availableVeganCooks.getSize() + injuredVeganCooks.getSize() + onBreakVeganCooks.getSize()
+             << ", VIP: "
+             << availableVIPCooks.getSize() + injuredVIPCooks.getSize()
+                    + onBreakVIPCooks.getSize()
+             << "]\n";
+
+        file << "Avg Wait = " << sumwait / order_ids.getSize()
+             << ", Avg Serv: " << sumser / order_ids.getSize() << "\n";
+
+        file << "Auto-promoted: " << autopromotedcount << "\n";
+
+        for(int i = 0; i < cook_ids.getSize(); i++)
+        {
+            Cook* cook = cookMap.get(cook_ids[i]);
+            file << "Cook " << cook->getID() << ": "
+                 << "Orders ["
+                 << "Norm: " << cook->getnormalordercount()
+                 << ", Veg: " << cook->getveganordercount()
+                 << ", VIP: " << cook->getvipordercount() << "]"
+                 << ", Busy: " << cook->getbucount()
+                 << ", Idel times: " << cook->getidcount()
+                 << ", Break/Injured times: " << cook->getbrcount() << "\n";
+            file << "Utilization: "
+                 << (double)cook->getbrcount()
+                        / (cook->getbrcount() + cook->getidcount()
+                           + cook->getbucount());
+            file << "\n";
+        }
+    }
+
+    first = false;
 }
 
 void Restaurant::executeEvents()
@@ -363,6 +467,7 @@ void Restaurant::ExecuteTimeStep() {
         waitingNormalOrders.remove(order);
         delete order;
         order = waitingNormalOrders.peek();
+        autopromotedcount++;
     }
 
 
@@ -532,6 +637,12 @@ void Restaurant::ExecuteTimeStep() {
         }
     }
 
+    // Update count for cooks
+    for(int i=0; i < cook_ids.getSize(); i++)
+    {
+        Cook *ptrcook = cookMap.get(cook_ids[i]);
+        ptrcook->updatecount();
+    }
 
     CurrentTimeStep++;
 }
@@ -600,7 +711,7 @@ void Restaurant::simulate()
     mode = gui->getGUIMode();
     while(1)
     {
-        UpdateUI();
+        
         if(mode == MODE_SLNT)
         {
             while(!waitingNormalOrders.isEmpty() || !waitingVeganOrders.isEmpty()
@@ -611,10 +722,12 @@ void Restaurant::simulate()
             {
                 ExecuteTimeStep();
             }
+            UpdateUI();
             Finish();
         }
         else if(mode == MODE_INTR)
         {
+            UpdateUI();
             // Waits for a mouse click for advances
             gui->waitForClick();
             if (!waitingNormalOrders.isEmpty() || !waitingVeganOrders.isEmpty()
@@ -632,6 +745,7 @@ void Restaurant::simulate()
         }
         else if(mode == MODE_STEP)
         {
+            UpdateUI();
             // waits for one second for advances
             Pause(1000);
 

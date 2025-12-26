@@ -20,6 +20,7 @@ private:
     int VIPOrdersOverloadThreshold;
     int NormalOrdersPromoteThreshold;
     int CurrentTimeStep;
+    int autopromotedcount;
     string msg;
 
     HashMap<Order *> orderMap;
@@ -68,7 +69,7 @@ public:
     void simulate();
     bool isOverloaded() const;
     void loadFiles(std::string filePath);
-    void writeOutput() const;
+    void writeOutput();
     void executeEvents();
     void ExecuteTimeStep();
     void Finish();
