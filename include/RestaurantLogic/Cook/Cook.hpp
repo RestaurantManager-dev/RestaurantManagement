@@ -1,6 +1,8 @@
 #pragma once
 #include "DataStructures/PriorityQueue.hpp"
 #include "DataStructures/Queue.hpp"
+#include "RestaurantLogic/Order/Order.hpp"
+#include <time.h>
 
 enum class CookType
 {
@@ -14,16 +16,21 @@ enum class CookStatus
 {
     Available,
     Busy,
-    OnBreak
+    OnBreak,
+    Injured
 };
 
 class Cook : public QueueNode<Cook *>
 {
 private:
     int ID;
-    int speed;
+    double speed;
+    double basespeed;
     int breakDuration;
     int ordersBeforeBreak;
+
+    double injuryprop;
+    int injuryduration;
 
     CookStatus status;
     int ordersServed;
@@ -33,6 +40,8 @@ private:
     int assignedTime;
     int breakStartTime;
 
+    double fatigue;
+
 protected:
     Cook(int ID, int speed, int breakDuration, int ordersBeforeBreak);
 
@@ -40,7 +49,7 @@ public:
     virtual ~Cook() = default;
 
     int getID() const;
-    int getSpeed() const;
+    double getSpeed() const;
     CookStatus getStatus() const;
     int getOrdersServed() const;
     int getBreakDuration() const;
@@ -57,8 +66,13 @@ public:
     void setAssignedTime(int time);
     void setBreakStartTime(int time);
     void setCurrentOrderSize(int size);
+    void assignorder(Order *order, int timestep);
+    bool finishedbreak(int timestep);
+    bool finishedinjury(int timestep);
+    void increasefatigue();
 
-    bool serveOrder();
+
+    bool serveOrder(int time);
 
     virtual CookType getType() const = 0;
 

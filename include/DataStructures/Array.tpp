@@ -91,3 +91,20 @@ void Array<T>::clear()
 {
     size = 0;
 }
+
+
+template <typename T>
+void Array<T>::remove(T sdata)
+{
+    bool found = false;
+    for(int i = 0; i < size; i++)
+    {
+        if(data[i] == sdata) { found = true; continue;}
+        if(found)
+        {
+            data[i - 1] = data[i];
+        }
+    }
+    if(found)
+        size--;
+}

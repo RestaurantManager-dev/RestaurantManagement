@@ -20,6 +20,7 @@ private:
     int VIPOrdersOverloadThreshold;
     int NormalOrdersPromoteThreshold;
     int CurrentTimeStep;
+    string msg;
 
     HashMap<Order *> orderMap;
 
@@ -31,7 +32,9 @@ private:
     Queue<Order *> inServiceVeganOrders;
     Queue<Order *> inServiceVIPOrders;
 
-    Queue<Order *> finishedOrders;
+    Queue<Order *> finishedNormalOrders;
+    Queue<Order *> finishedVeganOrders;
+    Queue<Order *> finishedVIPOrders;
 
     HashMap<Cook *> cookMap;
 
@@ -45,12 +48,18 @@ private:
     Queue<Cook *> onBreakVeganCooks;
     Queue<Cook *> onBreakVIPCooks;
 
+    Queue<Cook *> injuredNormalCooks;
+    Queue<Cook *> injuredVeganCooks;
+    Queue<Cook *> injuredVIPCooks;
+
     Queue<Event *> eventsQueue;
 
     PROG_MODE mode;
-    
+    bool isfinished = false;
     GUI *gui;
-    
+
+    Array<int> order_ids;
+    Array<int> cook_ids;
 
 public:
     Restaurant();
@@ -63,4 +72,6 @@ public:
     void executeEvents();
     void ExecuteTimeStep();
     void Finish();
+    void ShowStatusBar();
+    void UpdateUI();
 };

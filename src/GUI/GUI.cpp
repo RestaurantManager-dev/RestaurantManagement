@@ -1,4 +1,5 @@
 #include "GUI/GUI.h"
+#include <iostream>
 
 //////////////////////////////////////////////////////////////////////////////////////////
 GUI::GUI()
@@ -9,9 +10,9 @@ GUI::GUI()
 
 
 	//Set color for each order type
-	DrawingColors[(int)CookType::Normal] =  RED;	//normal-order color
-	DrawingColors[(int)CookType::Vegan] = DARKBLUE;		//vegan-order color
-	DrawingColors[(int)CookType::VIP] = 	VIOLET;		//VIP-order color					
+    DrawingColors[(int)CookType::Normal] = RED;                // normal-order color
+    DrawingColors[(int)CookType::Vegan] = DARKBLUE; // vegan-order color
+    DrawingColors[(int)CookType::VIP] = VIOLET;   // VIP-order color					
 
 	ClearStatusBar();
 	ClearDrawingArea(); 
@@ -46,6 +47,7 @@ string GUI::GetString() const
 		else
 			Label += Key;
 		
+		PrintMessage("");
 		PrintMessage(Label);
 	}
 }
@@ -54,13 +56,20 @@ string GUI::GetString() const
 
 // TODO: Add multiline
 void GUI::PrintMessage(string msg) const	//Prints a message on status bar
-{
-	ClearStatusBar();	//First clear the status bar
-	
+{	
+	static int lines = 0;
+    int linehieght = 18;
+    if(msg == "")
+    {
+        lines = 0;
+        ClearStatusBar();
+        return;
+	}
+
 	pWind->SetPen(DARKRED);
 	pWind->SetFont(18, BOLD , BY_NAME, "Arial");   
-	pWind->DrawString(10, WindHeight - (int) (StatusBarHeight/1.5), msg); // You may need to change these coordinates later 
-	                                                                      // to be able to write multi-line
+	pWind->DrawString(10, WindHeight - (int) (StatusBarHeight) + 10 + lines * linehieght, msg);
+    lines++;
 }
 
 void GUI::DrawString(const int iX, const int iY, const string Text)
@@ -108,21 +117,25 @@ void GUI::DrawRestArea() const
 	pWind->DrawLine(WindWidth/2, YHalfDrawingArea - RestWidth/2, WindWidth/2, YHalfDrawingArea + RestWidth/2);
 	pWind->DrawLine(WindWidth/2 - RestWidth/2, YHalfDrawingArea, WindWidth/2 + RestWidth/2, YHalfDrawingArea);
 
+
 	// 4- Drawing the 4 white squares inside the Rest (one for each region)
-	pWind->SetPen(WHITE);
+        /* pWind->SetPen(WHITE);
 	pWind->SetBrush(WHITE);
-	pWind->DrawRectangle(0, RestStartY, RestStartX, RestStartY + H);
-    
+	pWind->DrawRectangle(RestEndX, RestStartY, WindWidth, RestStartY + H);
 
 	pWind->SetPen(BLACK);
-    pWind->DrawString(0, RestStartY, "REST AREA");
+    pWind->DrawLine(RestEndX + (WindWidth - RestWidth) / 4, RestStartY,
+                        RestEndX + (WindWidth - RestWidth) / 4, RestStartY + L);
+    
 
+    int padding = 5;
+    pWind->SetFont(20, BOLD, BY_NAME, "Arial");
+    pWind->DrawString(RestEndX + padding, RestStartY, "REST AREA");
 
-	/* pWind->DrawRectangle(RestStartX + L / 3, RestEndY - L / 3,
-                                  RestStartX + 2 * L / 3, RestEndY - 2 * L / 3);
-	pWind->DrawRectangle(RestEndX - 2*L/3, RestStartY + L/3, RestEndX - L/3, RestStartY + 2*L/3);
-	pWind->DrawRectangle(RestEndX - 2*L/3, RestEndY - L/3, RestEndX - L/3, RestEndY - 2*L/3);
-        */
+	pWind->DrawString((RestEndX + (WindWidth - RestWidth) / 4) + padding,
+                      RestStartY, "WORKING COOKS");*/
+	
+
 	// 5- Writing regions labels
 	pWind->SetPen(WHITE);
 	pWind->SetFont(20, BOLD , BY_NAME, "Arial");
@@ -217,10 +230,6 @@ void GUI::UpdateInterface()
 	DrawAllItems();
 }
 
-/*
-	AddOrderForDrawing: Adds a new item related to the passed Order to the drawing list
-*/
-
 void GUI::AddToDrawingList(Order* pOrd)
 {
 	DrawingItem *pDitem=new DrawingItem;
@@ -278,6 +287,7 @@ PROG_MODE	GUI::getGUIMode() const
 		Mode = (PROG_MODE) (atoi(S.c_str())-1);
 	}
 	while(Mode< 0 || Mode >= MODE_CNT);
-	
+
+	PrintMessage("");
 	return Mode;
 }

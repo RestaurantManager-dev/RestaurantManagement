@@ -25,6 +25,7 @@ public:
     int getCapacity() const;
     bool isEmpty() const;
     void clear();
+    void remove(T data);
 };
 
 #include "DataStructures/Array.tpp"
