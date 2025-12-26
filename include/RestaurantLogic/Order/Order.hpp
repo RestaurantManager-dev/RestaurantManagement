@@ -1,5 +1,6 @@
 #pragma once
 #include "DataStructures/Queue.hpp"
+#include "DataStructures/PriorityQueue.hpp"
 
 enum class OrderStatus
 {
@@ -26,6 +27,7 @@ private:
     int arrivalTime;
     int assignedTime;
     int finishTime;
+    int deadline;
     OrderStatus status;
 
 protected:

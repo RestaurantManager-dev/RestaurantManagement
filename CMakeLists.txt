@@ -14,6 +14,42 @@ target_include_directories(DataStructures
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
+
+# --- CMUgraphicsLib Library ---
+file(GLOB CMU_SOURCES 
+    "include/CMUgraphicsLib/*.cpp" 
+    "include/CMUgraphicsLib/*.c"
+    "include/CMUgraphicsLib/jpeg/*.c"
+)
+add_library(CMUgraphicsLib STATIC ${CMU_SOURCES})
+target_include_directories(CMUgraphicsLib
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/CMUgraphicsLib
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/CMUgraphicsLib/jpeg
+)
+# CMUgraphicsLib uses Windows API (GDI, User32, WinMM)
+target_link_libraries(CMUgraphicsLib
+    PUBLIC
+        gdi32
+        user32
+        winmm
+)
+
+
+# --- GUI Library ---
+file(GLOB GUI_SOURCES "src/GUI/*.cpp")
+add_library(GUI STATIC ${GUI_SOURCES})
+target_include_directories(GUI
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+target_link_libraries(GUI
+    PUBLIC
+        CMUgraphicsLib
+)
+
+
+
 # --- RestaurantLogic Library ---
 
 file(GLOB_RECURSE LOGIC_SOURCES
@@ -31,6 +67,7 @@ target_include_directories(RestaurantLogic
 target_link_libraries(RestaurantLogic
     PRIVATE
         DataStructures
+        GUI
 )
 
 # --- RestaurantApp Executable ---
@@ -50,7 +87,6 @@ target_link_libraries(RestaurantApp
 )
 
 
-# See. I told you YOU were stupid not CMAKE.
 target_compile_definitions(RestaurantApp
     PRIVATE
         INPUT_FILE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/src/RestaurantApp/input.txt"

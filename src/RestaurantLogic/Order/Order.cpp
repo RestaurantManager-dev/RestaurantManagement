@@ -47,6 +47,7 @@ OrderStatus Order::getStatus() const
 
 void Order::setAssignedTime(int assignedTime)
 {
+    deadline = assignedTime + (size / 3) - (price / 100);
     this->assignedTime = assignedTime;
 }
 

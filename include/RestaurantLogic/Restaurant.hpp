@@ -6,6 +6,10 @@
 #include "RestaurantLogic/Event/Event.hpp"
 #include "RestaurantLogic/Order/Orders.hpp"
 
+#include "GUI/GUI.h"
+#include "GUI/Defs.h"
+#include "CMUgraphicsLib/auxil.h"
+
 #include <string>
 #include <fstream>
 #include <iostream>
@@ -16,6 +20,8 @@ private:
     int VIPOrdersOverloadThreshold;
     int NormalOrdersPromoteThreshold;
     int CurrentTimeStep;
+    int autopromotedcount;
+    string msg;
 
     HashMap<Order *> orderMap;
 
@@ -27,7 +33,9 @@ private:
     Queue<Order *> inServiceVeganOrders;
     Queue<Order *> inServiceVIPOrders;
 
-    Queue<Order *> finishedOrders;
+    Queue<Order *> finishedNormalOrders;
+    Queue<Order *> finishedVeganOrders;
+    Queue<Order *> finishedVIPOrders;
 
     HashMap<Cook *> cookMap;
 
@@ -41,15 +49,30 @@ private:
     Queue<Cook *> onBreakVeganCooks;
     Queue<Cook *> onBreakVIPCooks;
 
+    Queue<Cook *> injuredNormalCooks;
+    Queue<Cook *> injuredVeganCooks;
+    Queue<Cook *> injuredVIPCooks;
+
     Queue<Event *> eventsQueue;
+
+    PROG_MODE mode;
+    bool isfinished = false;
+    GUI *gui;
+
+    Array<int> order_ids;
+    Array<int> cook_ids;
 
 public:
     Restaurant();
-    ~Restaurant() = default;
+    ~Restaurant();
 
     void simulate();
     bool isOverloaded() const;
     void loadFiles(std::string filePath);
-    void writeOutput() const;
+    void writeOutput();
     void executeEvents();
+    void ExecuteTimeStep();
+    void Finish();
+    void ShowStatusBar();
+    void UpdateUI();
 };
