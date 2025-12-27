@@ -11,7 +11,8 @@ Restaurant::Restaurant() : orderMap(10007), cookMap(10007)
     autopromotedcount = 0;
 }
 
-Restaurant::~Restaurant() {
+Restaurant::~Restaurant()
+{
     if(gui)
         delete gui;
     gui = nullptr;
@@ -25,8 +26,8 @@ bool Restaurant::isOverloaded() const
 void Restaurant::loadFiles(std::string filePath)
 {
     /*
-    * GET & STORE ALL THE EVENTS & COOKS
-    */
+     * GET & STORE ALL THE EVENTS & COOKS
+     */
     std::ifstream file(filePath);
     if(!file.is_open())
     {
@@ -130,18 +131,19 @@ void Restaurant::loadFiles(std::string filePath)
     file.close();
 }
 
-void Restaurant::writeOutput() {
+void Restaurant::writeOutput()
+{
     static bool first = true;
 
     if(first)
     {
-        std::ofstream file("output.txt");
+        std::ofstream file(OUTPUT_FILE_PATH);
         if(!file.is_open())
         {
             first = true;
             return;
         }
-        
+
         Order *normal_order = finishedNormalOrders.peek();
         Order *vegan_order = finishedVeganOrders.peek();
         Order *vip_order = finishedVIPOrders.peek();
@@ -155,35 +157,37 @@ void Restaurant::writeOutput() {
             long long nf = normal_order ? normal_order->getFinishTime() : -1;
             long long vf = vegan_order ? vegan_order->getFinishTime() : -1;
             long long vif = vip_order ? vip_order->getFinishTime() : -1;
-            
+
             if((nf <= vf || vf == -1) && (nf <= vif || vif == -1) && nf != -1)
             {
                 sumser += normal_order->getServiceTime();
                 sumwait += normal_order->getWaitingTime();
                 file << normal_order->getFinishTime() << " "
-                     << normal_order->getID()
-                     << " " << normal_order->getArrivalTime() << " "
+                     << normal_order->getID() << " "
+                     << normal_order->getArrivalTime() << " "
                      << normal_order->getWaitingTime() << " "
                      << normal_order->getServiceTime() << " ";
                 finishedNormalOrders.dequeue();
             }
-            else if((vf <= nf || nf == -1) && (vf <= vif || vif == -1) && vf != -1)
+            else if((vf <= nf || nf == -1) && (vf <= vif || vif == -1)
+                    && vf != -1)
             {
                 sumser += vegan_order->getServiceTime();
                 sumwait += vegan_order->getWaitingTime();
-                file << vegan_order->getFinishTime() << vegan_order->getID()
-                     << " "
+                file << vegan_order->getFinishTime() << " "
+                     << vegan_order->getID() << " "
                      << vegan_order->getArrivalTime() << " "
                      << vegan_order->getWaitingTime() << " "
                      << vegan_order->getServiceTime() << " ";
                 finishedVeganOrders.dequeue();
             }
-            else if((vif <= nf || nf == -1) && (vif <= vf || vf == -1) && vif != -1)
+            else if((vif <= nf || nf == -1) && (vif <= vf || vf == -1)
+                    && vif != -1)
             {
                 sumser += vip_order->getServiceTime();
                 sumwait += vip_order->getWaitingTime();
-                file << vip_order->getFinishTime() << vip_order->getID() << " "
-                     << vip_order->getArrivalTime() << " "
+                file << vip_order->getFinishTime() << " " << vip_order->getID()
+                     << " " << vip_order->getArrivalTime() << " "
                      << vip_order->getWaitingTime() << " "
                      << vip_order->getServiceTime();
                 finishedVIPOrders.dequeue();
@@ -195,16 +199,17 @@ void Restaurant::writeOutput() {
             file << "\n";
         }
 
-
         file << "Orders: " << order_ids.getSize()
              << "[Norm: " << finishedNormalOrders.getSize()
              << ", Veg: " << finishedVeganOrders.getSize()
              << ", VIP: " << finishedVIPOrders.getSize() << "]\n";
 
         file << "Cooks: " << cook_ids.getSize() << "[Norm: "
-             << availableNormalCooks.getSize() + injuredNormalCooks.getSize() + onBreakNormalCooks.getSize()
+             << availableNormalCooks.getSize() + injuredNormalCooks.getSize()
+                    + onBreakNormalCooks.getSize()
              << ", Veg: "
-             << availableVeganCooks.getSize() + injuredVeganCooks.getSize() + onBreakVeganCooks.getSize()
+             << availableVeganCooks.getSize() + injuredVeganCooks.getSize()
+                    + onBreakVeganCooks.getSize()
              << ", VIP: "
              << availableVIPCooks.getSize() + injuredVIPCooks.getSize()
                     + onBreakVIPCooks.getSize()
@@ -217,14 +222,14 @@ void Restaurant::writeOutput() {
 
         for(int i = 0; i < cook_ids.getSize(); i++)
         {
-            Cook* cook = cookMap.get(cook_ids[i]);
+            Cook *cook = cookMap.get(cook_ids[i]);
             file << "Cook " << cook->getID() << ": "
                  << "Orders ["
                  << "Norm: " << cook->getnormalordercount()
                  << ", Veg: " << cook->getveganordercount()
                  << ", VIP: " << cook->getvipordercount() << "]"
                  << ", Busy: " << cook->getbucount()
-                 << ", Idel times: " << cook->getidcount()
+                 << ", Idle times: " << cook->getidcount()
                  << ", Break/Injured times: " << cook->getbrcount() << "\n";
             file << "Utilization: "
                  << (double)cook->getbrcount()
@@ -240,8 +245,8 @@ void Restaurant::writeOutput() {
 void Restaurant::executeEvents()
 {
     /*
-    * EXCUTE ALL EVENTS IN THIS TIME STEP [ARRIVAL + CANCELLATION + PROMOTION]
-    */
+     * EXCUTE ALL EVENTS IN THIS TIME STEP [ARRIVAL + CANCELLATION + PROMOTION]
+     */
     if(eventsQueue.isEmpty())
         return;
 
@@ -305,7 +310,7 @@ void Restaurant::executeEvents()
                                  porder->getPrice() + Pevent->getExtraMoney());
                 orderMap.add(porder->getID(), new_porder);
                 waitingVIPOrders.enqueue(new_porder);
-                
+
                 if(porder->getType() == OrderType::Normal)
                 {
                     waitingNormalOrders.remove(porder);
@@ -316,7 +321,6 @@ void Restaurant::executeEvents()
                 }
                 delete porder;
             }
-
         }
 
         eventsQueue.dequeue();
@@ -324,13 +328,14 @@ void Restaurant::executeEvents()
     }
 }
 
-void Restaurant::ExecuteTimeStep() {
+void Restaurant::ExecuteTimeStep()
+{
     /*
-    * Execute all events in this time step
-    * Handle Assign cooks to orders
-    * Handle finished orders
-    * Handle rest cooks
-    */
+     * Execute all events in this time step
+     * Handle Assign cooks to orders
+     * Handle finished orders
+     * Handle rest cooks
+     */
     msg = "";
     executeEvents();
 
@@ -351,8 +356,8 @@ void Restaurant::ExecuteTimeStep() {
             inServiceVIPOrders.enqueue(order);
 
             msg += "vip cook#" + to_string(vipcook->getID())
-                  + " is assigned VIP order #" + to_string(order->getID())
-                  + " to prepare ";
+                   + " is assigned VIP order #" + to_string(order->getID())
+                   + " to prepare ";
         }
         else if(normalcook)
         {
@@ -364,8 +369,8 @@ void Restaurant::ExecuteTimeStep() {
             inServiceVIPOrders.enqueue(order);
 
             msg += "normal cook#" + to_string(normalcook->getID())
-                  + " is assigned VIP order #" + to_string(order->getID())
-                  + " to prepare ";
+                   + " is assigned VIP order #" + to_string(order->getID())
+                   + " to prepare ";
         }
         else if(vegancook)
         {
@@ -377,8 +382,8 @@ void Restaurant::ExecuteTimeStep() {
             inServiceVIPOrders.enqueue(order);
 
             msg += "vegan cook#" + to_string(vegancook->getID())
-                  + " is assigned VIP order #" + to_string(order->getID())
-                  + " to prepare ";
+                   + " is assigned VIP order #" + to_string(order->getID())
+                   + " to prepare ";
         }
         else
         {
@@ -387,8 +392,7 @@ void Restaurant::ExecuteTimeStep() {
 
         order = waitingVIPOrders.peek();
     }
-    
-    
+
     order = waitingVeganOrders.peek();
     while(order)
     {
@@ -402,8 +406,8 @@ void Restaurant::ExecuteTimeStep() {
             inServiceVeganOrders.enqueue(order);
 
             msg += "vegan cook#" + to_string(cook->getID())
-                  + " is assigned vegan order #" + to_string(order->getID())
-                  + " to prepare ";
+                   + " is assigned vegan order #" + to_string(order->getID())
+                   + " to prepare ";
         }
         else
         {
@@ -411,7 +415,6 @@ void Restaurant::ExecuteTimeStep() {
         }
 
         order = waitingVeganOrders.peek();
-    
     }
     order = waitingNormalOrders.peek();
     while(order)
@@ -421,21 +424,21 @@ void Restaurant::ExecuteTimeStep() {
         if(normalcook)
         {
             normalcook->assignorder(order, CurrentTimeStep);
-            
+
             availableNormalCooks.remove(normalcook);
             inServiceCooks.enqueue(normalcook);
-            
+
             waitingNormalOrders.remove(order);
             inServiceNormalOrders.enqueue(order);
 
             msg += "normal cook#" + to_string(normalcook->getID())
-                  + " is assigned Normal order #" + to_string(order->getID())
-                  + " to prepare ";
+                   + " is assigned Normal order #" + to_string(order->getID())
+                   + " to prepare ";
         }
         else if(VIPcook)
         {
             VIPcook->assignorder(order, CurrentTimeStep);
-            
+
             availableVIPCooks.remove(VIPcook);
             inServiceCooks.enqueue(VIPcook);
 
@@ -443,8 +446,8 @@ void Restaurant::ExecuteTimeStep() {
             inServiceNormalOrders.enqueue(order);
 
             msg += "VIP cook#" + to_string(VIPcook->getID())
-                  + " is assigned Normal order #" + to_string(order->getID())
-                  + " to prepare ";
+                   + " is assigned Normal order #" + to_string(order->getID())
+                   + " to prepare ";
         }
         else
         {
@@ -455,11 +458,13 @@ void Restaurant::ExecuteTimeStep() {
 
     // Auto Promotion
     order = waitingNormalOrders.peek();
-    while(order && (CurrentTimeStep - order->getArrivalTime()) >= NormalOrdersPromoteThreshold)
+    while(order
+          && (CurrentTimeStep - order->getArrivalTime())
+                 >= NormalOrdersPromoteThreshold)
     {
-        VIPOrder *new_order = new VIPOrder(
-                order->getID(), order->getArrivalTime(), order->getSize(),
-                order->getPrice());
+        VIPOrder *new_order =
+            new VIPOrder(order->getID(), order->getArrivalTime(),
+                         order->getSize(), order->getPrice());
 
         orderMap.add(order->getID(), new_order);
         waitingVIPOrders.enqueue(new_order);
@@ -470,17 +475,17 @@ void Restaurant::ExecuteTimeStep() {
         autopromotedcount++;
     }
 
-
     // Check Finished Orders
     Cook *cook = inServiceCooks.peek();
     while(cook && cook->getEndTimeOfCurrentOrder() <= CurrentTimeStep)
     {
         int orderid = cook->getCurrentOrderID();
         Order *order = orderMap.get(orderid);
-        msg += "Cook #" + to_string(cook->getID()) + "Finished Order #" + to_string(order->getID());
-        
+        msg += "Cook #" + to_string(cook->getID()) + "Finished Order #"
+               + to_string(order->getID());
+
         inServiceCooks.dequeue();
-        
+
         cook->serveOrder(CurrentTimeStep);
         if(cook->getStatus() == CookStatus::Available)
         {
@@ -527,7 +532,6 @@ void Restaurant::ExecuteTimeStep() {
             msg += "Cook #" + to_string(cook->getID()) + "is injured";
         }
 
-        
         order->setStatus(OrderStatus::Finished);
         order->setFinishTime(CurrentTimeStep);
         switch(order->getType())
@@ -548,7 +552,6 @@ void Restaurant::ExecuteTimeStep() {
 
         cook = inServiceCooks.peek();
     }
-
 
     // Get Cooks back from rest
     Cook *normal_cook = onBreakNormalCooks.peek();
@@ -575,8 +578,6 @@ void Restaurant::ExecuteTimeStep() {
         vip_cook = onBreakVIPCooks.peek();
     }
 
-
-
     // Get Cooks back from injury
     normal_cook = injuredNormalCooks.peek();
     while(normal_cook && normal_cook->finishedinjury(CurrentTimeStep))
@@ -602,7 +603,6 @@ void Restaurant::ExecuteTimeStep() {
         vip_cook = injuredVIPCooks.peek();
     }
 
-
     // Skip Breaks
     if(waitingVIPOrders.getSize() >= VIPOrdersOverloadThreshold)
     {
@@ -623,7 +623,8 @@ void Restaurant::ExecuteTimeStep() {
             availableNormalCooks.enqueue(normal_cook);
             normal_cook->setStatus(CookStatus::Available);
             normal_cook->increasefatigue();
-            msg += "Cook #" + to_string(normal_cook->getID()) + "Works over time";
+            msg +=
+                "Cook #" + to_string(normal_cook->getID()) + "Works over time";
         }
 
         Cook *vegan_cook = onBreakVeganCooks.peek();
@@ -633,12 +634,13 @@ void Restaurant::ExecuteTimeStep() {
             availableVeganCooks.enqueue(vegan_cook);
             vegan_cook->setStatus(CookStatus::Available);
             vegan_cook->increasefatigue();
-            msg += "Cook #" + to_string(vegan_cook->getID()) + "Works over time";
+            msg +=
+                "Cook #" + to_string(vegan_cook->getID()) + "Works over time";
         }
     }
 
     // Update count for cooks
-    for(int i=0; i < cook_ids.getSize(); i++)
+    for(int i = 0; i < cook_ids.getSize(); i++)
     {
         Cook *ptrcook = cookMap.get(cook_ids[i]);
         ptrcook->updatecount();
@@ -647,14 +649,16 @@ void Restaurant::ExecuteTimeStep() {
     CurrentTimeStep++;
 }
 
-void Restaurant::Finish() {
+void Restaurant::Finish()
+{
     writeOutput();
     gui->PrintMessage("");
     gui->PrintMessage("Every thing is finished");
     isfinished = true;
 }
 
-void Restaurant::ShowStatusBar() {
+void Restaurant::ShowStatusBar()
+{
     if(!isfinished)
     {
         gui->UpdateInterface();
@@ -686,10 +690,11 @@ void Restaurant::ShowStatusBar() {
     }
 }
 
-void Restaurant::UpdateUI() {
+void Restaurant::UpdateUI()
+{
     ShowStatusBar();
     gui->ResetDrawingList();
-    
+
     for(int i = 0; i < cook_ids.getSize(); i++)
     {
         Cook *ptrcook = cookMap.get(cook_ids[i]);
@@ -711,14 +716,15 @@ void Restaurant::simulate()
     mode = gui->getGUIMode();
     while(1)
     {
-        
+
         if(mode == MODE_SLNT)
         {
-            while(!waitingNormalOrders.isEmpty() || !waitingVeganOrders.isEmpty()
-               || !waitingVIPOrders.isEmpty()
-               || !inServiceNormalOrders.isEmpty()
-               || !inServiceVeganOrders.isEmpty()
-               || !inServiceVIPOrders.isEmpty() || !eventsQueue.isEmpty())
+            while(!waitingNormalOrders.isEmpty()
+                  || !waitingVeganOrders.isEmpty()
+                  || !waitingVIPOrders.isEmpty()
+                  || !inServiceNormalOrders.isEmpty()
+                  || !inServiceVeganOrders.isEmpty()
+                  || !inServiceVIPOrders.isEmpty() || !eventsQueue.isEmpty())
             {
                 ExecuteTimeStep();
             }
@@ -730,10 +736,10 @@ void Restaurant::simulate()
             UpdateUI();
             // Waits for a mouse click for advances
             gui->waitForClick();
-            if (!waitingNormalOrders.isEmpty() || !waitingVeganOrders.isEmpty()
-                || !waitingVIPOrders.isEmpty()
-                || !inServiceNormalOrders.isEmpty()
-                || !inServiceVeganOrders.isEmpty()
+            if(!waitingNormalOrders.isEmpty() || !waitingVeganOrders.isEmpty()
+               || !waitingVIPOrders.isEmpty()
+               || !inServiceNormalOrders.isEmpty()
+               || !inServiceVeganOrders.isEmpty()
                || !inServiceVIPOrders.isEmpty() || !eventsQueue.isEmpty())
             {
                 ExecuteTimeStep();

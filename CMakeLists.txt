@@ -70,6 +70,11 @@ target_link_libraries(RestaurantLogic
         GUI
 )
 
+target_compile_definitions(RestaurantLogic
+    PRIVATE
+        OUTPUT_FILE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/src/RestaurantApp/output.txt"
+)
+
 # --- RestaurantApp Executable ---
 
 file(GLOB_RECURSE APP_SOURCES
