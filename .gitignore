@@ -17,6 +17,8 @@ compile_commands.json
 *.dll
 *.exe
 
+src/RestaurantApp/output.txt
+
 # --- User-Specific Files ---
 CMakeUserPresets.json
 
