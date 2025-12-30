@@ -230,9 +230,10 @@ void Restaurant::writeOutput()
                  << ", VIP: " << cook->getvipordercount() << "]"
                  << ", Busy: " << cook->getbucount()
                  << ", Idle times: " << cook->getidcount()
-                 << ", Break/Injured times: " << cook->getbrcount() << "\n";
+                 << ", Break/Injured times: "
+                 << cook->getbrcount() + cook->getinjcount() << "\n";
             file << "Utilization: "
-                 << (double)cook->getbrcount()
+                 << (double)cook->getbucount()
                         / (cook->getbrcount() + cook->getidcount()
                            + cook->getbucount());
             file << "\n";

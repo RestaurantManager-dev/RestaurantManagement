@@ -43,19 +43,40 @@ private:
     double fatigue;
 
     int normalordercount, veganordercount, vipordercount, bucount, idcount,
-        brcount;
+        brcount, injcount;
 
 protected:
     Cook(int ID, int speed, int breakDuration, int ordersBeforeBreak);
 
 public:
-    int getnormalordercount() const { return normalordercount; }
-    int getveganordercount() const { return veganordercount; }
-    int getvipordercount() const { return vipordercount; }
-    int getbucount() const { return bucount; }
-    int getidcount() const { return idcount; }
-    int getbrcount() const { return brcount; }
-
+    int getnormalordercount() const
+    {
+        return normalordercount;
+    }
+    int getveganordercount() const
+    {
+        return veganordercount;
+    }
+    int getvipordercount() const
+    {
+        return vipordercount;
+    }
+    int getbucount() const
+    {
+        return bucount;
+    }
+    int getidcount() const
+    {
+        return idcount;
+    }
+    int getbrcount() const
+    {
+        return brcount;
+    }
+    int getinjcount() const
+    {
+        return injcount;
+    }
 
     virtual ~Cook() = default;
 
@@ -83,8 +104,6 @@ public:
     void increasefatigue();
     void updatecount();
 
-
-
     bool serveOrder(int time);
 
     virtual CookType getType() const = 0;
@@ -95,9 +114,15 @@ public:
         bool operator()(Cook *a, Cook *b) const override
         {
             int aFinishTime =
-                a->getAssignedTime() + (a->getCurrentOrderID() == -1 ? 0 : a->getCurrentOrderSize() / a->getSpeed());
+                a->getAssignedTime()
+                + (a->getCurrentOrderID() == -1
+                       ? 0
+                       : a->getCurrentOrderSize() / a->getSpeed());
             int bFinishTime =
-                b->getAssignedTime() + (b->getCurrentOrderID() == -1 ? 0 : b->getCurrentOrderSize() / b->getSpeed());
+                b->getAssignedTime()
+                + (b->getCurrentOrderID() == -1
+                       ? 0
+                       : b->getCurrentOrderSize() / b->getSpeed());
             return aFinishTime < bFinishTime;
         }
     };

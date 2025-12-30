@@ -19,7 +19,8 @@ Cook::Cook(int ID, int speed, int breakDuration, int ordersBeforeBreak)
     bucount = 0;
     idcount = 0;
     brcount = 0;
-   // breakStartTime = 0;
+    injcount = 0;
+    // breakStartTime = 0;
 }
 
 int Cook::getID() const
@@ -108,7 +109,7 @@ bool Cook::serveOrder(int stime)
         speed = basespeed;
         return false;
     }
-    
+
     setStatus(CookStatus::Available);
     setCurrentOrderID(-1);
     setAssignedTime(-1);
@@ -121,6 +122,7 @@ bool Cook::serveOrder(int stime)
     int num = rand() % 100;
     if(num <= injuryprop * 100)
     {
+        injcount++;
         setStatus(CookStatus::Injured);
         setOrdersServed(0);
         setBreakStartTime(stime);
@@ -141,7 +143,8 @@ void Cook::setCurrentOrderSize(int size)
     this->currentOrderSize = size;
 }
 
-void Cook::assignorder(Order *order, int timestep) {
+void Cook::assignorder(Order *order, int timestep)
+{
     setCurrentOrderID(order->getID());
     setAssignedTime(timestep);
     setStatus(CookStatus::Busy);
@@ -166,9 +169,10 @@ void Cook::assignorder(Order *order, int timestep) {
     }
 }
 
-bool Cook::finishedbreak(int timestep) {
+bool Cook::finishedbreak(int timestep)
+{
     int fts = getBreakStartTime() + getBreakDuration();
-    
+
     if(fts <= timestep)
     {
         setStatus(CookStatus::Available);
@@ -189,11 +193,13 @@ bool Cook::finishedinjury(int timestep)
     return false;
 }
 
-void Cook::increasefatigue() {
+void Cook::increasefatigue()
+{
     fatigue = fatigue - .1;
 }
 
-void Cook::updatecount() {
+void Cook::updatecount()
+{
     if(status == CookStatus::Available)
     {
         idcount++;
