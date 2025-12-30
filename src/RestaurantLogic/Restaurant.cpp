@@ -235,7 +235,7 @@ void Restaurant::writeOutput()
             file << "Utilization: "
                  << (double)cook->getbucount()
                         / (cook->getbrcount() + cook->getidcount()
-                           + cook->getbucount());
+                           + cook->getbucount() + cook->getinjcount());
             file << "\n";
         }
     }

@@ -208,7 +208,11 @@ void Cook::updatecount()
     {
         bucount++;
     }
-    else
+    else if(status == CookStatus::Injured)
+    {
+        injcount++;
+    }
+    else if(status == CookStatus::OnBreak)
     {
         brcount++;
     }
